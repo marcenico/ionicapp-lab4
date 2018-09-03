@@ -10,7 +10,6 @@ import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Pedidoventa } from '../../models/Pedidoventa';
-import { SocketConnection } from '../../sockets/socket.connections';
 
 
 /**
@@ -21,12 +20,11 @@ export class PedidoventaApi extends BaseLoopBackApi {
 
   constructor(
     @Inject(HttpClient) protected http: HttpClient,
-    @Inject(SocketConnection) protected connection: SocketConnection,
     @Inject(SDKModels) protected models: SDKModels,
     @Inject(LoopBackAuth) protected auth: LoopBackAuth,
     @Optional() @Inject(ErrorHandler) protected errorHandler: ErrorHandler
   ) {
-    super(http,  connection,  models, auth, errorHandler);
+    super(http,  models, auth, errorHandler);
   }
 
   /**

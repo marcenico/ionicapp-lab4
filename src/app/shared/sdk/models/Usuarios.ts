@@ -1,8 +1,8 @@
 /* tslint:disable */
 
 declare var Object: any;
-export interface UsersInterface {
-  "id": number;
+export interface UsuariosInterface {
+  "id"?: number;
   "name": string;
   "email": string;
   "password": string;
@@ -11,7 +11,7 @@ export interface UsersInterface {
   "updatedAt"?: Date;
 }
 
-export class Users implements UsersInterface {
+export class Usuarios implements UsuariosInterface {
   "id": number;
   "name": string;
   "email": string;
@@ -19,24 +19,24 @@ export class Users implements UsersInterface {
   "rememberToken": string;
   "createdAt": Date;
   "updatedAt": Date;
-  constructor(data?: UsersInterface) {
+  constructor(data?: UsuariosInterface) {
     Object.assign(this, data);
   }
   /**
    * The name of the model represented by this $resource,
-   * i.e. `Users`.
+   * i.e. `Usuarios`.
    */
   public static getModelName() {
-    return "Users";
+    return "Usuarios";
   }
   /**
   * @method factory
   * @author Jonathan Casarrubias
   * @license MIT
-  * This method creates an instance of Users for dynamic purposes.
+  * This method creates an instance of Usuarios for dynamic purposes.
   **/
-  public static factory(data: UsersInterface): Users{
-    return new Users(data);
+  public static factory(data: UsuariosInterface): Usuarios{
+    return new Usuarios(data);
   }
   /**
   * @method getModelDefinition
@@ -47,9 +47,9 @@ export class Users implements UsersInterface {
   **/
   public static getModelDefinition() {
     return {
-      name: 'Users',
-      plural: 'Users',
-      path: 'Users',
+      name: 'Usuarios',
+      plural: 'Usuarios',
+      path: 'Usuarios',
       idName: 'id',
       properties: {
         "id": {

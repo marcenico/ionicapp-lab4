@@ -2,12 +2,13 @@
 
 declare var Object: any;
 export interface RubroInterface {
-  "id": number;
+  "id"?: number;
   "codigo": string;
   "denominacion": string;
   "createdAt"?: Date;
   "updatedAt"?: Date;
   "rubroPadreId"?: number;
+  rubroPadreAHijo?: Rubro[];
 }
 
 export class Rubro implements RubroInterface {
@@ -17,6 +18,7 @@ export class Rubro implements RubroInterface {
   "createdAt": Date;
   "updatedAt": Date;
   "rubroPadreId": number;
+  rubroPadreAHijo: Rubro[];
   constructor(data?: RubroInterface) {
     Object.assign(this, data);
   }
@@ -76,6 +78,14 @@ export class Rubro implements RubroInterface {
         },
       },
       relations: {
+        rubroPadreAHijo: {
+          name: 'rubroPadreAHijo',
+          type: 'Rubro[]',
+          model: 'Rubro',
+          relationType: 'hasMany',
+                  keyFrom: 'id',
+          keyTo: 'rubroPadreId'
+        },
       }
     }
   }

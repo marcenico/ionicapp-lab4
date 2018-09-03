@@ -1,28 +1,35 @@
 /* tslint:disable */
+import {
+  Pedidoventadetalle
+} from '../index';
 
 declare var Object: any;
 export interface ArticuloInterface {
-  "id": number;
+  "id"?: number;
   "denominacion": string;
   "codigo": string;
-  "preciocompra": number;
-  "precioventa": number;
+  "precioCompra": number;
+  "precioVenta": number;
   "iva": number;
-  "rubroId": number;
   "createdAt"?: Date;
   "updatedAt"?: Date;
+  "rubroId": number;
+  rubro?: Articulo[];
+  pedidoventadetalles?: Pedidoventadetalle[];
 }
 
 export class Articulo implements ArticuloInterface {
   "id": number;
   "denominacion": string;
   "codigo": string;
-  "preciocompra": number;
-  "precioventa": number;
+  "precioCompra": number;
+  "precioVenta": number;
   "iva": number;
-  "rubroId": number;
   "createdAt": Date;
   "updatedAt": Date;
+  "rubroId": number;
+  rubro: Articulo[];
+  pedidoventadetalles: Pedidoventadetalle[];
   constructor(data?: ArticuloInterface) {
     Object.assign(this, data);
   }
@@ -68,20 +75,16 @@ export class Articulo implements ArticuloInterface {
           name: 'codigo',
           type: 'string'
         },
-        "preciocompra": {
-          name: 'preciocompra',
+        "precioCompra": {
+          name: 'precioCompra',
           type: 'number'
         },
-        "precioventa": {
-          name: 'precioventa',
+        "precioVenta": {
+          name: 'precioVenta',
           type: 'number'
         },
         "iva": {
           name: 'iva',
-          type: 'number'
-        },
-        "rubroId": {
-          name: 'rubroId',
           type: 'number'
         },
         "createdAt": {
@@ -92,8 +95,28 @@ export class Articulo implements ArticuloInterface {
           name: 'updatedAt',
           type: 'Date'
         },
+        "rubroId": {
+          name: 'rubroId',
+          type: 'number'
+        },
       },
       relations: {
+        rubro: {
+          name: 'rubro',
+          type: 'Articulo[]',
+          model: 'Articulo',
+          relationType: 'hasMany',
+                  keyFrom: 'id',
+          keyTo: 'rubroId'
+        },
+        pedidoventadetalles: {
+          name: 'pedidoventadetalles',
+          type: 'Pedidoventadetalle[]',
+          model: 'Pedidoventadetalle',
+          relationType: 'hasMany',
+                  keyFrom: 'id',
+          keyTo: 'articuloId'
+        },
       }
     }
   }

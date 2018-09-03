@@ -44,10 +44,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CookieBrowser } from './storage/cookie.browser';
 import { StorageBrowser } from './storage/storage.browser';
-import { SocketBrowser } from './sockets/socket.browser';
-import { SocketDriver } from './sockets/socket.driver';
-import { SocketConnection } from './sockets/socket.connections';
-import { RealTime } from './services/core/real.time';
 import { UserApi } from './services/custom/User';
 import { ArticuloApi } from './services/custom/Articulo';
 import { ClienteApi } from './services/custom/Cliente';
@@ -55,9 +51,8 @@ import { DomicilioApi } from './services/custom/Domicilio';
 import { MigrationsApi } from './services/custom/Migrations';
 import { PedidoventaApi } from './services/custom/Pedidoventa';
 import { PedidoventadetalleApi } from './services/custom/Pedidoventadetalle';
-import { PasswordResetsApi } from './services/custom/PasswordResets';
 import { RubroApi } from './services/custom/Rubro';
-import { UsersApi } from './services/custom/Users';
+import { UsuariosApi } from './services/custom/Usuarios';
 /**
 * @module SDKBrowserModule
 * @description
@@ -72,8 +67,7 @@ import { UsersApi } from './services/custom/Users';
   declarations: [ ],
   exports:      [ ],
   providers:    [
-    ErrorHandler,
-    SocketConnection
+    ErrorHandler
   ]
 })
 export class SDKBrowserModule {
@@ -87,7 +81,6 @@ export class SDKBrowserModule {
         LoopBackAuth,
         LoggerService,
         SDKModels,
-        RealTime,
         UserApi,
         ArticuloApi,
         ClienteApi,
@@ -95,12 +88,10 @@ export class SDKBrowserModule {
         MigrationsApi,
         PedidoventaApi,
         PedidoventadetalleApi,
-        PasswordResetsApi,
         RubroApi,
-        UsersApi,
+        UsuariosApi,
         internalStorageProvider,
-        { provide: SDKStorage, useClass: StorageBrowser },
-        { provide: SocketDriver, useClass: SocketBrowser }
+        { provide: SDKStorage, useClass: StorageBrowser }
       ]
     };
   }

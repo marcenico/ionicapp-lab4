@@ -1,15 +1,18 @@
 /* tslint:disable */
+import {
+  Pedidoventa
+} from '../index';
 
 declare var Object: any;
 export interface PedidoventadetalleInterface {
-  "id": number;
+  "id"?: number;
   "cantidad": number;
   "subTotal": number;
   "porcentajeDescuento": number;
   "articuloId": number;
   "pedidoVentaId": number;
-  "createdAt"?: Date;
-  "updatedAt"?: Date;
+  pedidoventa?: Pedidoventa;
+  articulo?: Pedidoventa;
 }
 
 export class Pedidoventadetalle implements PedidoventadetalleInterface {
@@ -19,8 +22,8 @@ export class Pedidoventadetalle implements PedidoventadetalleInterface {
   "porcentajeDescuento": number;
   "articuloId": number;
   "pedidoVentaId": number;
-  "createdAt": Date;
-  "updatedAt": Date;
+  pedidoventa: Pedidoventa;
+  articulo: Pedidoventa;
   constructor(data?: PedidoventadetalleInterface) {
     Object.assign(this, data);
   }
@@ -78,16 +81,24 @@ export class Pedidoventadetalle implements PedidoventadetalleInterface {
           name: 'pedidoVentaId',
           type: 'number'
         },
-        "createdAt": {
-          name: 'createdAt',
-          type: 'Date'
-        },
-        "updatedAt": {
-          name: 'updatedAt',
-          type: 'Date'
-        },
       },
       relations: {
+        pedidoventa: {
+          name: 'pedidoventa',
+          type: 'Pedidoventa',
+          model: 'Pedidoventa',
+          relationType: 'belongsTo',
+                  keyFrom: 'pedidoVentaId',
+          keyTo: 'id'
+        },
+        articulo: {
+          name: 'articulo',
+          type: 'Pedidoventa',
+          model: 'Pedidoventa',
+          relationType: 'belongsTo',
+                  keyFrom: 'pedidoVentaId',
+          keyTo: 'id'
+        },
       }
     }
   }

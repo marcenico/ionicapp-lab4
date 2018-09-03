@@ -2,33 +2,31 @@
 
 declare var Object: any;
 export interface PedidoventaInterface {
-  "id": number;
-  "createdAt"?: Date;
-  "updatedAt"?: Date;
-  "fechaEstimadaEntrega": Date;
+  "id"?: number;
+  "nroPedido": number;
+  "fechaPedido": Date;
+  "fechaEstimadaEntrega"?: Date;
   "gastosEnvio": number;
   "estado": string;
   "entregado": number;
-  "fechaPedido": Date;
-  "numeroPedido": string;
   "subTotal": number;
   "montoTotal": number;
   "clienteId": number;
+  "domicilioId": number;
 }
 
 export class Pedidoventa implements PedidoventaInterface {
   "id": number;
-  "createdAt": Date;
-  "updatedAt": Date;
+  "nroPedido": number;
+  "fechaPedido": Date;
   "fechaEstimadaEntrega": Date;
   "gastosEnvio": number;
   "estado": string;
   "entregado": number;
-  "fechaPedido": Date;
-  "numeroPedido": string;
   "subTotal": number;
   "montoTotal": number;
   "clienteId": number;
+  "domicilioId": number;
   constructor(data?: PedidoventaInterface) {
     Object.assign(this, data);
   }
@@ -66,12 +64,12 @@ export class Pedidoventa implements PedidoventaInterface {
           name: 'id',
           type: 'number'
         },
-        "createdAt": {
-          name: 'createdAt',
-          type: 'Date'
+        "nroPedido": {
+          name: 'nroPedido',
+          type: 'number'
         },
-        "updatedAt": {
-          name: 'updatedAt',
+        "fechaPedido": {
+          name: 'fechaPedido',
           type: 'Date'
         },
         "fechaEstimadaEntrega": {
@@ -90,14 +88,6 @@ export class Pedidoventa implements PedidoventaInterface {
           name: 'entregado',
           type: 'number'
         },
-        "fechaPedido": {
-          name: 'fechaPedido',
-          type: 'Date'
-        },
-        "numeroPedido": {
-          name: 'numeroPedido',
-          type: 'string'
-        },
         "subTotal": {
           name: 'subTotal',
           type: 'number'
@@ -108,6 +98,10 @@ export class Pedidoventa implements PedidoventaInterface {
         },
         "clienteId": {
           name: 'clienteId',
+          type: 'number'
+        },
+        "domicilioId": {
+          name: 'domicilioId',
           type: 'number'
         },
       },

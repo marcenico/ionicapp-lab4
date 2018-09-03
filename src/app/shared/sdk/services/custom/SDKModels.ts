@@ -7,9 +7,8 @@ import { Domicilio } from '../../models/Domicilio';
 import { Migrations } from '../../models/Migrations';
 import { Pedidoventa } from '../../models/Pedidoventa';
 import { Pedidoventadetalle } from '../../models/Pedidoventadetalle';
-import { PasswordResets } from '../../models/PasswordResets';
 import { Rubro } from '../../models/Rubro';
-import { Users } from '../../models/Users';
+import { Usuarios } from '../../models/Usuarios';
 
 export interface Models { [name: string]: any }
 
@@ -24,9 +23,8 @@ export class SDKModels {
     Migrations: Migrations,
     Pedidoventa: Pedidoventa,
     Pedidoventadetalle: Pedidoventadetalle,
-    PasswordResets: PasswordResets,
     Rubro: Rubro,
-    Users: Users,
+    Usuarios: Usuarios,
     
   };
 

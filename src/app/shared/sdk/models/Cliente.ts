@@ -1,22 +1,25 @@
 /* tslint:disable */
+import {
+  Pedidoventa
+} from '../index';
 
 declare var Object: any;
 export interface ClienteInterface {
-  "id": number;
-  "createdAt"?: Date;
-  "updatedAt"?: Date;
+  "id"?: number;
   "razonSocial": string;
   "cuit": string;
   "saldo"?: number;
+  "domicilioId": number;
+  pedido_venta_cliente?: Pedidoventa;
 }
 
 export class Cliente implements ClienteInterface {
   "id": number;
-  "createdAt": Date;
-  "updatedAt": Date;
   "razonSocial": string;
   "cuit": string;
   "saldo": number;
+  "domicilioId": number;
+  pedido_venta_cliente: Pedidoventa;
   constructor(data?: ClienteInterface) {
     Object.assign(this, data);
   }
@@ -54,14 +57,6 @@ export class Cliente implements ClienteInterface {
           name: 'id',
           type: 'number'
         },
-        "createdAt": {
-          name: 'createdAt',
-          type: 'Date'
-        },
-        "updatedAt": {
-          name: 'updatedAt',
-          type: 'Date'
-        },
         "razonSocial": {
           name: 'razonSocial',
           type: 'string'
@@ -74,8 +69,20 @@ export class Cliente implements ClienteInterface {
           name: 'saldo',
           type: 'number'
         },
+        "domicilioId": {
+          name: 'domicilioId',
+          type: 'number'
+        },
       },
       relations: {
+        pedido_venta_cliente: {
+          name: 'pedido_venta_cliente',
+          type: 'Pedidoventa',
+          model: 'Pedidoventa',
+          relationType: 'hasOne',
+                  keyFrom: 'id',
+          keyTo: 'clienteId'
+        },
       }
     }
   }

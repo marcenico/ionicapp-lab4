@@ -9,24 +9,22 @@ import { LoopBackFilter,  } from '../../models/BaseModels';
 import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PasswordResets } from '../../models/PasswordResets';
-import { SocketConnection } from '../../sockets/socket.connections';
+import { Usuarios } from '../../models/Usuarios';
 
 
 /**
- * Api services for the `PasswordResets` model.
+ * Api services for the `Usuarios` model.
  */
 @Injectable()
-export class PasswordResetsApi extends BaseLoopBackApi {
+export class UsuariosApi extends BaseLoopBackApi {
 
   constructor(
     @Inject(HttpClient) protected http: HttpClient,
-    @Inject(SocketConnection) protected connection: SocketConnection,
     @Inject(SDKModels) protected models: SDKModels,
     @Inject(LoopBackAuth) protected auth: LoopBackAuth,
     @Optional() @Inject(ErrorHandler) protected errorHandler: ErrorHandler
   ) {
-    super(http,  connection,  models, auth, errorHandler);
+    super(http,  models, auth, errorHandler);
   }
 
   /**
@@ -42,13 +40,13 @@ export class PasswordResetsApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `PasswordResets` object.)
+   * This usually means the response is a `Usuarios` object.)
    * </em>
    */
   public patchOrCreate(data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/PasswordResets";
+    "/Usuarios";
     let _routeParams: any = {};
     let _postBody: any = {
       data: data
@@ -61,7 +59,7 @@ export class PasswordResetsApi extends BaseLoopBackApi {
   /**
    * Patch attributes for a model instance and persist it into the data source.
    *
-   * @param {any} id PasswordResets id
+   * @param {any} id Usuarios id
    *
    * @param {object} data Request data.
    *
@@ -73,13 +71,13 @@ export class PasswordResetsApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `PasswordResets` object.)
+   * This usually means the response is a `Usuarios` object.)
    * </em>
    */
   public patchAttributes(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/PasswordResets/:id";
+    "/Usuarios/:id";
     let _routeParams: any = {
       id: id
     };
@@ -93,9 +91,9 @@ export class PasswordResetsApi extends BaseLoopBackApi {
 
   /**
    * The name of the model represented by this $resource,
-   * i.e. `PasswordResets`.
+   * i.e. `Usuarios`.
    */
   public getModelName() {
-    return "PasswordResets";
+    return "Usuarios";
   }
 }

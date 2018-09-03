@@ -1,30 +1,34 @@
 /* tslint:disable */
+import {
+  Cliente,
+  Pedidoventa
+} from '../index';
 
 declare var Object: any;
 export interface DomicilioInterface {
-  "id": number;
-  "createdAt"?: Date;
-  "updatedAt"?: Date;
+  "id"?: number;
   "calle": string;
   "numero": string;
   "localidad": string;
   "latitud": number;
   "longitud": number;
-  "clienteId"?: number;
-  "pedidoId"?: number;
+  "createdAt"?: Date;
+  "updatedAt"?: Date;
+  cliente_domicilio?: Cliente;
+  pedido_venta_domicilio?: Pedidoventa;
 }
 
 export class Domicilio implements DomicilioInterface {
   "id": number;
-  "createdAt": Date;
-  "updatedAt": Date;
   "calle": string;
   "numero": string;
   "localidad": string;
   "latitud": number;
   "longitud": number;
-  "clienteId": number;
-  "pedidoId": number;
+  "createdAt": Date;
+  "updatedAt": Date;
+  cliente_domicilio: Cliente;
+  pedido_venta_domicilio: Pedidoventa;
   constructor(data?: DomicilioInterface) {
     Object.assign(this, data);
   }
@@ -62,14 +66,6 @@ export class Domicilio implements DomicilioInterface {
           name: 'id',
           type: 'number'
         },
-        "createdAt": {
-          name: 'createdAt',
-          type: 'Date'
-        },
-        "updatedAt": {
-          name: 'updatedAt',
-          type: 'Date'
-        },
         "calle": {
           name: 'calle',
           type: 'string'
@@ -90,16 +86,32 @@ export class Domicilio implements DomicilioInterface {
           name: 'longitud',
           type: 'number'
         },
-        "clienteId": {
-          name: 'clienteId',
-          type: 'number'
+        "createdAt": {
+          name: 'createdAt',
+          type: 'Date'
         },
-        "pedidoId": {
-          name: 'pedidoId',
-          type: 'number'
+        "updatedAt": {
+          name: 'updatedAt',
+          type: 'Date'
         },
       },
       relations: {
+        cliente_domicilio: {
+          name: 'cliente_domicilio',
+          type: 'Cliente',
+          model: 'Cliente',
+          relationType: 'hasOne',
+                  keyFrom: 'id',
+          keyTo: 'domicilioId'
+        },
+        pedido_venta_domicilio: {
+          name: 'pedido_venta_domicilio',
+          type: 'Pedidoventa',
+          model: 'Pedidoventa',
+          relationType: 'hasOne',
+                  keyFrom: 'id',
+          keyTo: 'domicilioId'
+        },
       }
     }
   }

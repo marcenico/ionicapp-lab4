@@ -2,7 +2,7 @@
 
 declare var Object: any;
 export interface MigrationsInterface {
-  "id": number;
+  "id"?: number;
   "migration": string;
   "batch": number;
 }
