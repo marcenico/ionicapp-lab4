@@ -14,8 +14,8 @@ export interface DomicilioInterface {
   "longitud": number;
   "createdAt"?: Date;
   "updatedAt"?: Date;
-  cliente_domicilio?: Cliente;
-  pedido_venta_domicilio?: Pedidoventa;
+  cliente?: Cliente;
+  pedido_venta?: Pedidoventa;
 }
 
 export class Domicilio implements DomicilioInterface {
@@ -27,8 +27,8 @@ export class Domicilio implements DomicilioInterface {
   "longitud": number;
   "createdAt": Date;
   "updatedAt": Date;
-  cliente_domicilio: Cliente;
-  pedido_venta_domicilio: Pedidoventa;
+  cliente: Cliente;
+  pedido_venta: Pedidoventa;
   constructor(data?: DomicilioInterface) {
     Object.assign(this, data);
   }
@@ -96,16 +96,16 @@ export class Domicilio implements DomicilioInterface {
         },
       },
       relations: {
-        cliente_domicilio: {
-          name: 'cliente_domicilio',
+        cliente: {
+          name: 'cliente',
           type: 'Cliente',
           model: 'Cliente',
           relationType: 'hasOne',
                   keyFrom: 'id',
           keyTo: 'domicilioId'
         },
-        pedido_venta_domicilio: {
-          name: 'pedido_venta_domicilio',
+        pedido_venta: {
+          name: 'pedido_venta',
           type: 'Pedidoventa',
           model: 'Pedidoventa',
           relationType: 'hasOne',

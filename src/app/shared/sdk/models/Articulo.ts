@@ -1,6 +1,7 @@
 /* tslint:disable */
 import {
-  Pedidoventadetalle
+  Pedidoventadetalle,
+  Rubro
 } from '../index';
 
 declare var Object: any;
@@ -14,8 +15,8 @@ export interface ArticuloInterface {
   "createdAt"?: Date;
   "updatedAt"?: Date;
   "rubroId": number;
-  rubro?: Articulo[];
   pedidoventadetalles?: Pedidoventadetalle[];
+  rubro?: Rubro;
 }
 
 export class Articulo implements ArticuloInterface {
@@ -28,8 +29,8 @@ export class Articulo implements ArticuloInterface {
   "createdAt": Date;
   "updatedAt": Date;
   "rubroId": number;
-  rubro: Articulo[];
   pedidoventadetalles: Pedidoventadetalle[];
+  rubro: Rubro;
   constructor(data?: ArticuloInterface) {
     Object.assign(this, data);
   }
@@ -101,14 +102,6 @@ export class Articulo implements ArticuloInterface {
         },
       },
       relations: {
-        rubro: {
-          name: 'rubro',
-          type: 'Articulo[]',
-          model: 'Articulo',
-          relationType: 'hasMany',
-                  keyFrom: 'id',
-          keyTo: 'rubroId'
-        },
         pedidoventadetalles: {
           name: 'pedidoventadetalles',
           type: 'Pedidoventadetalle[]',
@@ -116,6 +109,14 @@ export class Articulo implements ArticuloInterface {
           relationType: 'hasMany',
                   keyFrom: 'id',
           keyTo: 'articuloId'
+        },
+        rubro: {
+          name: 'rubro',
+          type: 'Rubro',
+          model: 'Rubro',
+          relationType: 'belongsTo',
+                  keyFrom: 'rubroId',
+          keyTo: 'id'
         },
       }
     }

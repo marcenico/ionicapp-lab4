@@ -1,6 +1,7 @@
 /* tslint:disable */
 import {
-  Pedidoventa
+  Pedidoventa,
+  Articulo
 } from '../index';
 
 declare var Object: any;
@@ -12,7 +13,7 @@ export interface PedidoventadetalleInterface {
   "articuloId": number;
   "pedidoVentaId": number;
   pedidoventa?: Pedidoventa;
-  articulo?: Pedidoventa;
+  articulo?: Articulo;
 }
 
 export class Pedidoventadetalle implements PedidoventadetalleInterface {
@@ -23,7 +24,7 @@ export class Pedidoventadetalle implements PedidoventadetalleInterface {
   "articuloId": number;
   "pedidoVentaId": number;
   pedidoventa: Pedidoventa;
-  articulo: Pedidoventa;
+  articulo: Articulo;
   constructor(data?: PedidoventadetalleInterface) {
     Object.assign(this, data);
   }
@@ -93,10 +94,10 @@ export class Pedidoventadetalle implements PedidoventadetalleInterface {
         },
         articulo: {
           name: 'articulo',
-          type: 'Pedidoventa',
-          model: 'Pedidoventa',
+          type: 'Articulo',
+          model: 'Articulo',
           relationType: 'belongsTo',
-                  keyFrom: 'pedidoVentaId',
+                  keyFrom: 'articuloId',
           keyTo: 'id'
         },
       }

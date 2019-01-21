@@ -1,4 +1,7 @@
 /* tslint:disable */
+import {
+  Pedidoventadetalle
+} from '../index';
 
 declare var Object: any;
 export interface PedidoventaInterface {
@@ -13,6 +16,7 @@ export interface PedidoventaInterface {
   "montoTotal": number;
   "clienteId": number;
   "domicilioId": number;
+  pedido_venta_detalle?: Pedidoventadetalle[];
 }
 
 export class Pedidoventa implements PedidoventaInterface {
@@ -27,6 +31,7 @@ export class Pedidoventa implements PedidoventaInterface {
   "montoTotal": number;
   "clienteId": number;
   "domicilioId": number;
+  pedido_venta_detalle: Pedidoventadetalle[];
   constructor(data?: PedidoventaInterface) {
     Object.assign(this, data);
   }
@@ -106,6 +111,14 @@ export class Pedidoventa implements PedidoventaInterface {
         },
       },
       relations: {
+        pedido_venta_detalle: {
+          name: 'pedido_venta_detalle',
+          type: 'Pedidoventadetalle[]',
+          model: 'Pedidoventadetalle',
+          relationType: 'hasMany',
+                  keyFrom: 'id',
+          keyTo: 'pedidoVentaId'
+        },
       }
     }
   }

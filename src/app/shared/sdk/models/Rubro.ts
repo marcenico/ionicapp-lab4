@@ -1,4 +1,7 @@
 /* tslint:disable */
+import {
+  Articulo
+} from '../index';
 
 declare var Object: any;
 export interface RubroInterface {
@@ -8,7 +11,8 @@ export interface RubroInterface {
   "createdAt"?: Date;
   "updatedAt"?: Date;
   "rubroPadreId"?: number;
-  rubroPadreAHijo?: Rubro[];
+  rubroPadre?: Rubro;
+  rubro_articulo?: Articulo[];
 }
 
 export class Rubro implements RubroInterface {
@@ -18,7 +22,8 @@ export class Rubro implements RubroInterface {
   "createdAt": Date;
   "updatedAt": Date;
   "rubroPadreId": number;
-  rubroPadreAHijo: Rubro[];
+  rubroPadre: Rubro;
+  rubro_articulo: Articulo[];
   constructor(data?: RubroInterface) {
     Object.assign(this, data);
   }
@@ -78,13 +83,21 @@ export class Rubro implements RubroInterface {
         },
       },
       relations: {
-        rubroPadreAHijo: {
-          name: 'rubroPadreAHijo',
-          type: 'Rubro[]',
+        rubroPadre: {
+          name: 'rubroPadre',
+          type: 'Rubro',
           model: 'Rubro',
+          relationType: 'belongsTo',
+                  keyFrom: 'rubroPadreId',
+          keyTo: 'id'
+        },
+        rubro_articulo: {
+          name: 'rubro_articulo',
+          type: 'Articulo[]',
+          model: 'Articulo',
           relationType: 'hasMany',
                   keyFrom: 'id',
-          keyTo: 'rubroPadreId'
+          keyTo: 'rubroId'
         },
       }
     }

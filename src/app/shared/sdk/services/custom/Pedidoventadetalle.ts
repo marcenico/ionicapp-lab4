@@ -11,6 +11,7 @@ import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Pedidoventadetalle } from '../../models/Pedidoventadetalle';
 import { Pedidoventa } from '../../models/Pedidoventa';
+import { Articulo } from '../../models/Articulo';
 
 
 /**

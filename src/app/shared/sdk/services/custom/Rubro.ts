@@ -10,6 +10,7 @@ import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Rubro } from '../../models/Rubro';
+import { Articulo } from '../../models/Articulo';
 
 
 /**
@@ -28,11 +29,11 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Find a related item by id for rubroPadreAHijo.
+   * Fetches belongsTo relation rubroPadre.
    *
    * @param {any} id Rubro id
    *
-   * @param {any} fk Foreign key for rubroPadreAHijo
+   * @param {boolean} refresh 
    *
    * @returns {object} An empty reference that will be
    *   populated with the actual data once the response is returned
@@ -43,10 +44,40 @@ export class RubroApi extends BaseLoopBackApi {
    * This usually means the response is a `Rubro` object.)
    * </em>
    */
-  public findByIdRubroPadreAHijo(id: any, fk: any, customHeaders?: Function): Observable<any> {
+  public getRubroPadre(id: any, refresh: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo/:fk";
+    "/Rubros/:id/rubroPadre";
+    let _routeParams: any = {
+      id: id
+    };
+    let _postBody: any = {};
+    let _urlParams: any = {};
+    if (typeof refresh !== 'undefined' && refresh !== null) _urlParams.refresh = refresh;
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders);
+    return result;
+  }
+
+  /**
+   * Find a related item by id for rubro_articulo.
+   *
+   * @param {any} id Rubro id
+   *
+   * @param {any} fk Foreign key for rubro_articulo
+   *
+   * @returns {object} An empty reference that will be
+   *   populated with the actual data once the response is returned
+   *   from the server.
+   *
+   * <em>
+   * (The remote method definition does not provide any description.
+   * This usually means the response is a `Rubro` object.)
+   * </em>
+   */
+  public findByIdRubro_articulo(id: any, fk: any, customHeaders?: Function): Observable<any> {
+    let _method: string = "GET";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+    "/Rubros/:id/rubro_articulo/:fk";
     let _routeParams: any = {
       id: id,
       fk: fk
@@ -58,11 +89,11 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Delete a related item by id for rubroPadreAHijo.
+   * Delete a related item by id for rubro_articulo.
    *
    * @param {any} id Rubro id
    *
-   * @param {any} fk Foreign key for rubroPadreAHijo
+   * @param {any} fk Foreign key for rubro_articulo
    *
    * @returns {object} An empty reference that will be
    *   populated with the actual data once the response is returned
@@ -70,10 +101,10 @@ export class RubroApi extends BaseLoopBackApi {
    *
    * This method returns no data.
    */
-  public destroyByIdRubroPadreAHijo(id: any, fk: any, customHeaders?: Function): Observable<any> {
+  public destroyByIdRubro_articulo(id: any, fk: any, customHeaders?: Function): Observable<any> {
     let _method: string = "DELETE";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo/:fk";
+    "/Rubros/:id/rubro_articulo/:fk";
     let _routeParams: any = {
       id: id,
       fk: fk
@@ -85,11 +116,11 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Update a related item by id for rubroPadreAHijo.
+   * Update a related item by id for rubro_articulo.
    *
    * @param {any} id Rubro id
    *
-   * @param {any} fk Foreign key for rubroPadreAHijo
+   * @param {any} fk Foreign key for rubro_articulo
    *
    * @param {object} data Request data.
    *
@@ -104,10 +135,10 @@ export class RubroApi extends BaseLoopBackApi {
    * This usually means the response is a `Rubro` object.)
    * </em>
    */
-  public updateByIdRubroPadreAHijo(id: any, fk: any, data: any = {}, customHeaders?: Function): Observable<any> {
+  public updateByIdRubro_articulo(id: any, fk: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PUT";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo/:fk";
+    "/Rubros/:id/rubro_articulo/:fk";
     let _routeParams: any = {
       id: id,
       fk: fk
@@ -121,7 +152,7 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Queries rubroPadreAHijo of Rubro.
+   * Queries rubro_articulo of Rubro.
    *
    * @param {any} id Rubro id
    *
@@ -136,10 +167,10 @@ export class RubroApi extends BaseLoopBackApi {
    * This usually means the response is a `Rubro` object.)
    * </em>
    */
-  public getRubroPadreAHijo(id: any, filter: LoopBackFilter = {}, customHeaders?: Function): Observable<any> {
+  public getRubro_articulo(id: any, filter: LoopBackFilter = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo";
+    "/Rubros/:id/rubro_articulo";
     let _routeParams: any = {
       id: id
     };
@@ -151,7 +182,7 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Creates a new instance in rubroPadreAHijo of this model.
+   * Creates a new instance in rubro_articulo of this model.
    *
    * @param {any} id Rubro id
    *
@@ -168,10 +199,10 @@ export class RubroApi extends BaseLoopBackApi {
    * This usually means the response is a `Rubro` object.)
    * </em>
    */
-  public createRubroPadreAHijo(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
+  public createRubro_articulo(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo";
+    "/Rubros/:id/rubro_articulo";
     let _routeParams: any = {
       id: id
     };
@@ -184,7 +215,7 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Deletes all rubroPadreAHijo of this model.
+   * Deletes all rubro_articulo of this model.
    *
    * @param {any} id Rubro id
    *
@@ -194,10 +225,10 @@ export class RubroApi extends BaseLoopBackApi {
    *
    * This method returns no data.
    */
-  public deleteRubroPadreAHijo(id: any, customHeaders?: Function): Observable<any> {
+  public deleteRubro_articulo(id: any, customHeaders?: Function): Observable<any> {
     let _method: string = "DELETE";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo";
+    "/Rubros/:id/rubro_articulo";
     let _routeParams: any = {
       id: id
     };
@@ -208,7 +239,7 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Counts rubroPadreAHijo of Rubro.
+   * Counts rubro_articulo of Rubro.
    *
    * @param {any} id Rubro id
    *
@@ -222,10 +253,10 @@ export class RubroApi extends BaseLoopBackApi {
    *
    *  - `count` – `{number}` - 
    */
-  public countRubroPadreAHijo(id: any, where: any = {}, customHeaders?: Function): Observable<any> {
+  public countRubro_articulo(id: any, where: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo/count";
+    "/Rubros/:id/rubro_articulo/count";
     let _routeParams: any = {
       id: id
     };
@@ -299,7 +330,7 @@ export class RubroApi extends BaseLoopBackApi {
   }
 
   /**
-   * Creates a new instance in rubroPadreAHijo of this model.
+   * Creates a new instance in rubro_articulo of this model.
    *
    * @param {any} id Rubro id
    *
@@ -316,10 +347,10 @@ export class RubroApi extends BaseLoopBackApi {
    * This usually means the response is a `Rubro` object.)
    * </em>
    */
-  public createManyRubroPadreAHijo(id: any, data: any[] = [], customHeaders?: Function): Observable<any> {
+  public createManyRubro_articulo(id: any, data: any[] = [], customHeaders?: Function): Observable<any> {
     let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Rubros/:id/rubroPadreAHijo";
+    "/Rubros/:id/rubro_articulo";
     let _routeParams: any = {
       id: id
     };

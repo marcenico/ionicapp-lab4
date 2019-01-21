@@ -30,7 +30,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Fetches hasOne relation cliente_domicilio.
+   * Fetches hasOne relation cliente.
    *
    * @param {any} id Domicilio id
    *
@@ -45,10 +45,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public getCliente_domicilio(id: any, refresh: any = {}, customHeaders?: Function): Observable<any> {
+  public getCliente(id: any, refresh: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/cliente_domicilio";
+    "/Domicilios/:id/cliente";
     let _routeParams: any = {
       id: id
     };
@@ -60,7 +60,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Creates a new instance in cliente_domicilio of this model.
+   * Creates a new instance in cliente of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -77,10 +77,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public createCliente_domicilio(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
+  public createCliente(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/cliente_domicilio";
+    "/Domicilios/:id/cliente";
     let _routeParams: any = {
       id: id
     };
@@ -93,7 +93,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Update cliente_domicilio of this model.
+   * Update cliente of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -110,10 +110,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public updateCliente_domicilio(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
+  public updateCliente(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PUT";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/cliente_domicilio";
+    "/Domicilios/:id/cliente";
     let _routeParams: any = {
       id: id
     };
@@ -126,7 +126,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Deletes cliente_domicilio of this model.
+   * Deletes cliente of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -136,10 +136,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    *
    * This method returns no data.
    */
-  public destroyCliente_domicilio(id: any, customHeaders?: Function): Observable<any> {
+  public destroyCliente(id: any, customHeaders?: Function): Observable<any> {
     let _method: string = "DELETE";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/cliente_domicilio";
+    "/Domicilios/:id/cliente";
     let _routeParams: any = {
       id: id
     };
@@ -150,7 +150,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Fetches hasOne relation pedido_venta_domicilio.
+   * Fetches hasOne relation pedido_venta.
    *
    * @param {any} id Domicilio id
    *
@@ -165,10 +165,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public getPedido_venta_domicilio(id: any, refresh: any = {}, customHeaders?: Function): Observable<any> {
+  public getPedido_venta(id: any, refresh: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/pedido_venta_domicilio";
+    "/Domicilios/:id/pedido_venta";
     let _routeParams: any = {
       id: id
     };
@@ -180,7 +180,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Creates a new instance in pedido_venta_domicilio of this model.
+   * Creates a new instance in pedido_venta of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -197,10 +197,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public createPedido_venta_domicilio(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
+  public createPedido_venta(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/pedido_venta_domicilio";
+    "/Domicilios/:id/pedido_venta";
     let _routeParams: any = {
       id: id
     };
@@ -213,7 +213,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Update pedido_venta_domicilio of this model.
+   * Update pedido_venta of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -230,10 +230,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public updatePedido_venta_domicilio(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
+  public updatePedido_venta(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PUT";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/pedido_venta_domicilio";
+    "/Domicilios/:id/pedido_venta";
     let _routeParams: any = {
       id: id
     };
@@ -246,7 +246,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Deletes pedido_venta_domicilio of this model.
+   * Deletes pedido_venta of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -256,10 +256,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    *
    * This method returns no data.
    */
-  public destroyPedido_venta_domicilio(id: any, customHeaders?: Function): Observable<any> {
+  public destroyPedido_venta(id: any, customHeaders?: Function): Observable<any> {
     let _method: string = "DELETE";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/pedido_venta_domicilio";
+    "/Domicilios/:id/pedido_venta";
     let _routeParams: any = {
       id: id
     };
@@ -332,7 +332,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Creates a new instance in cliente_domicilio of this model.
+   * Creates a new instance in cliente of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -349,10 +349,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public createManyCliente_domicilio(id: any, data: any[] = [], customHeaders?: Function): Observable<any> {
+  public createManyCliente(id: any, data: any[] = [], customHeaders?: Function): Observable<any> {
     let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/cliente_domicilio";
+    "/Domicilios/:id/cliente";
     let _routeParams: any = {
       id: id
     };
@@ -365,7 +365,7 @@ export class DomicilioApi extends BaseLoopBackApi {
   }
 
   /**
-   * Creates a new instance in pedido_venta_domicilio of this model.
+   * Creates a new instance in pedido_venta of this model.
    *
    * @param {any} id Domicilio id
    *
@@ -382,10 +382,10 @@ export class DomicilioApi extends BaseLoopBackApi {
    * This usually means the response is a `Domicilio` object.)
    * </em>
    */
-  public createManyPedido_venta_domicilio(id: any, data: any[] = [], customHeaders?: Function): Observable<any> {
+  public createManyPedido_venta(id: any, data: any[] = [], customHeaders?: Function): Observable<any> {
     let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Domicilios/:id/pedido_venta_domicilio";
+    "/Domicilios/:id/pedido_venta";
     let _routeParams: any = {
       id: id
     };
