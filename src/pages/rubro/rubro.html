@@ -1,0 +1,40 @@
+<ion-header>
+
+  <ion-navbar>
+      
+    <ion-title>Registro de rubros</ion-title>
+
+      <ion-buttons end>
+        <div *ngIf="canRetry">
+          <button (click)="getAll()" ion-button color="dark" round>
+            <ion-icon name="md-refresh"></ion-icon>
+          </button>
+        </div>
+      </ion-buttons>
+
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <ion-searchbar placeholder="Buscar..." [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()">
+      </ion-searchbar>
+    
+      <div *ngIf="_rubros.length > 0">
+        <ion-list *ngFor="let r of _auxRubros;  let i = index">
+          <ion-item>
+    
+            <div item-start>
+              <b>{{i+1}}</b>
+            </div>
+    
+            <h2>{{r.denominacion}}</h2>
+            <p>Codigo: {{r.codigo}}</p>
+    
+          </ion-item>
+        </ion-list>
+      </div>
+
+</ion-content>

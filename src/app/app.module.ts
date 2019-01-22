@@ -4,13 +4,16 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 //#region PAGES
-import { HomePage } from '../pages/home/home';
+import { PedidoPage } from '../pages/pedido/pedido';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ClientePage } from '../pages/cliente/cliente';
+import { ArticuloPage } from '../pages/articulo/articulo';
 //#endregion
 
 //#region PROVIDERS
-import { ClienteProvider } from '../providers/providers-cliente/cliente.provider';
+import { ClienteProvider } from '../providers/cliente.provider';
+import { ArticuloProvider } from '../providers/articulo.provider';
+import { RubroProvider } from '../providers/rubro.provider';
 //#endregion
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -19,12 +22,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SQLite } from '@ionic-native/sqlite';
 import { ClienteApi, SDKModels, InternalStorage, LoopBackAuth, PedidoventadetalleApi, ArticuloApi, RubroApi, PedidoventaApi, UsuariosApi, DomicilioApi } from './shared/sdk';
 import { HttpClientModule } from '@angular/common/http';
+import { RubroPage } from '../pages/rubro/rubro';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
+    PedidoPage,
     ClientePage,
+    ArticuloPage,
+    RubroPage,
     TabsPage
   ],
   imports: [
@@ -35,9 +41,11 @@ import { HttpClientModule } from '@angular/common/http';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
+    PedidoPage,
     TabsPage,
-    ClientePage
+    ClientePage,
+    RubroPage,
+    ArticuloPage
   ],
   providers: [
     StatusBar,
@@ -46,7 +54,9 @@ import { HttpClientModule } from '@angular/common/http';
     SQLite,
     ClienteProvider,
     DomicilioApi, UsuariosApi, ClienteApi, PedidoventaApi, RubroApi, ArticuloApi, PedidoventadetalleApi,
-    HttpClientModule, SDKModels, InternalStorage, LoopBackAuth
+    HttpClientModule, SDKModels, InternalStorage, LoopBackAuth,
+    ArticuloProvider,
+    RubroProvider
   ]
 })
 export class AppModule { }

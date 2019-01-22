@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ClienteApi, LoopBackFilter, Cliente } from '../../app/shared/sdk';
+import { ClienteApi, LoopBackFilter, Cliente } from '../app/shared/sdk';
 import { Observable } from 'rxjs';
 
 /*
@@ -29,18 +29,5 @@ export class ClienteProvider {
   getById(id: number): Observable<Cliente> {
     return this.clienteApi.findById(id);
   }
-
-  // create(data: Domicilio):Observable<Domicilio> {
-  //   return this.domService.create(data);
-  // }
-
-  update(data: Cliente, id: string): Observable<Cliente> {
-    return this.clienteApi.patchAttributes(id, data);
-  }
-
-  delete(data: Cliente): Observable<Cliente> {
-    return this.clienteApi.deleteById(data.id);
-  }
-
 
 }

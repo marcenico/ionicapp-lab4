@@ -1,27 +1,27 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
-import { ClienteProvider } from '../../providers/cliente.provider';
-import { Cliente } from '../../app/shared/sdk';
+import { Rubro } from '../../app/shared/sdk';
+import { RubroProvider } from '../../providers/rubro.provider';
 
 @IonicPage()
 @Component({
-  selector: 'page-cliente',
-  templateUrl: 'cliente.html',
+  selector: 'page-rubro',
+  templateUrl: 'rubro.html',
 })
-export class ClientePage {
+export class RubroPage {
 
   searchTerm: any = '';
   itTried: boolean = false;
   canRetry: boolean = false;
 
-  _clientes: Cliente[] = [];
-  _auxClientes: Cliente[] = [];
+  _rubros: Rubro[] = [];
+  _auxRubros: Rubro[] = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public toastCtrl: ToastController,
-    private _clienteProvider: ClienteProvider
+    private _rubroProvider: RubroProvider
   ) {
   }
 
@@ -32,22 +32,22 @@ export class ClientePage {
   ionViewDidEnter() {
     console.log("ionViewDidEnter");
     if (this.itTried) {
-      this.showToastTop(this._clientes);
+      this.showToastTop(this._rubros);
     }
   }
 
   getAll() {
-    this._clienteProvider.getAll()
+    this._rubroProvider.getAll()
       .subscribe(data => {
         console.log("GET ALL CLIENTES ", data);
-        this._auxClientes = this._clientes = data;
+        this._auxRubros = this._rubros = data;
         this.itTried = true;
         this.canRetry = false;
-        this.showToastTop(this._clientes);
+        this.showToastTop(this._rubros);
       }, error => {
         this.itTried = true;
         this.canRetry = true;
-        this.showToastTop(this._clientes)
+        this.showToastTop(this._rubros)
       });
   }
 
@@ -67,9 +67,7 @@ export class ClientePage {
   }
 
   setFilteredItems() {
-    this._auxClientes = this._clientes.filter(x => x.razonSocial.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    this._auxRubros = this._rubros.filter(x => x.denominacion.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
 }
-
-

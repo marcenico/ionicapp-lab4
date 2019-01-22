@@ -1,27 +1,34 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
-import { ClienteProvider } from '../../providers/cliente.provider';
-import { Cliente } from '../../app/shared/sdk';
+import { Articulo } from '../../app/shared/sdk';
+import { ArticuloProvider } from '../../providers/articulo.provider';
+
+/**
+ * Generated class for the ArticuloPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
 
 @IonicPage()
 @Component({
-  selector: 'page-cliente',
-  templateUrl: 'cliente.html',
+  selector: 'page-articulo',
+  templateUrl: 'articulo.html',
 })
-export class ClientePage {
+export class ArticuloPage {
 
   searchTerm: any = '';
   itTried: boolean = false;
   canRetry: boolean = false;
 
-  _clientes: Cliente[] = [];
-  _auxClientes: Cliente[] = [];
+  _articulos: Articulo[] = [];
+  _auxArticulos: Articulo[] = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public toastCtrl: ToastController,
-    private _clienteProvider: ClienteProvider
+    private _articuloProvider: ArticuloProvider
   ) {
   }
 
@@ -32,22 +39,22 @@ export class ClientePage {
   ionViewDidEnter() {
     console.log("ionViewDidEnter");
     if (this.itTried) {
-      this.showToastTop(this._clientes);
+      this.showToastTop(this._articulos);
     }
   }
 
   getAll() {
-    this._clienteProvider.getAll()
+    this._articuloProvider.getAll({ include: 'rubro' })
       .subscribe(data => {
-        console.log("GET ALL CLIENTES ", data);
-        this._auxClientes = this._clientes = data;
+        console.log("GET ALL ARTICULOS ", data);
+        this._auxArticulos = this._articulos = data;
         this.itTried = true;
         this.canRetry = false;
-        this.showToastTop(this._clientes);
+        this.showToastTop(this._articulos);
       }, error => {
         this.itTried = true;
         this.canRetry = true;
-        this.showToastTop(this._clientes)
+        this.showToastTop(this._articulos);
       });
   }
 
@@ -56,7 +63,7 @@ export class ClientePage {
       let position = 'top';
 
       let toast = this.toastCtrl.create({
-        message: 'No hay registros clientes / sin conexion',
+        message: 'No hay registros articulos / sin conexion',
         duration: 1000,
         position: position
       });
@@ -67,9 +74,7 @@ export class ClientePage {
   }
 
   setFilteredItems() {
-    this._auxClientes = this._clientes.filter(x => x.razonSocial.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    this._auxArticulos = this._articulos.filter(x => x.denominacion.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
 }
-
-
