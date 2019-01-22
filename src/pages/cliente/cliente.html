@@ -1,0 +1,42 @@
+<!--
+  Generated template for the ClientePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Registro de clientes</ion-title>
+  </ion-navbar>
+
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-searchbar placeholder="Buscar..." [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()">
+  </ion-searchbar>
+
+  <div *ngIf="_clientes.length > 0">
+    <ion-list *ngFor="let c of _auxClientes;  let i = index">
+      <ion-item>
+        <ion-row>
+
+          <ion-col col-1>
+            <b>{{i+1}}</b>
+          </ion-col>
+
+          <ion-col>
+            <h2>{{c.razonSocial}}</h2>
+            <p>Cuit: {{c.cuit}}</p>
+          </ion-col>
+
+        </ion-row>
+
+      </ion-item>
+    </ion-list>
+  </div>
+
+</ion-content>
