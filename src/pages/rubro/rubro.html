@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="navbar">
       
     <ion-title>Registro de rubros</ion-title>
 
@@ -22,18 +22,19 @@
     <ion-searchbar placeholder="Buscar..." [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()">
       </ion-searchbar>
     
-      <div *ngIf="_rubros.length > 0">
+      <div *ngIf="_rubros.length > 0" class="list">
         <ion-list *ngFor="let r of _auxRubros;  let i = index">
-          <ion-item>
-    
+     
+          <ion-item-divider >        
             <div item-start>
               <b>{{i+1}}</b>
             </div>
-    
+            
             <h2>{{r.denominacion}}</h2>
             <p>Codigo: {{r.codigo}}</p>
-    
-          </ion-item>
+            
+          </ion-item-divider>
+       
         </ion-list>
       </div>
 

@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="navbar">
     <ion-title>Registro de clientes</ion-title>
 
     <ion-buttons end>
@@ -17,14 +17,14 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding class="bg-style">
 
   <ion-searchbar placeholder="Buscar..." [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()">
   </ion-searchbar>
 
   <div *ngIf="_clientes.length > 0">
     <ion-list *ngFor="let c of _auxClientes;  let i = index">
-      <ion-item>
+      <ion-item-divider>
 
         <div item-start>
           <b>{{i+1}}</b>
@@ -33,7 +33,7 @@
         <h2>{{c.razonSocial}}</h2>
         <p>Cuit: {{c.cuit}}</p>
 
-      </ion-item>
+      </ion-item-divider>
     </ion-list>
   </div>
 

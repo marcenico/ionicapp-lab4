@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="navbar">
     <ion-title>Registro de articulos</ion-title>
 
     <ion-buttons end>
@@ -23,7 +23,7 @@
 
   <div *ngIf="_articulos.length > 0">
     <ion-list *ngFor="let a of _auxArticulos;  let i = index">
-      <ion-item>
+      <ion-item-divider>
 
         <div item-start>
           <b>{{i+1}}</b>
@@ -33,7 +33,7 @@
         <p>Rubro: {{a.rubro.denominacion}}</p>
         <p>Precio de venta: {{a.precioVenta}}</p>
 
-      </ion-item>
+      </ion-item-divider>
     </ion-list>
   </div>
 
