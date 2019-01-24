@@ -39,7 +39,7 @@ export class RubroPage {
   getAll() {
     this._rubroProvider.getAll()
       .subscribe(data => {
-        console.log("GET ALL CLIENTES ", data);
+        console.log("GET ALL RUBROS ", data);
         this._auxRubros = this._rubros = data;
         this.itTried = true;
         this.canRetry = false;
@@ -56,7 +56,7 @@ export class RubroPage {
       let position = 'top';
 
       let toast = this.toastCtrl.create({
-        message: 'No hay registros clientes / sin conexion',
+        message: 'No hay registros RUBROS / sin conexion',
         duration: 1000,
         position: position
       });

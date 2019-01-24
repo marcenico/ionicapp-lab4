@@ -63,7 +63,7 @@ export class ArticuloPage {
       let position = 'top';
 
       let toast = this.toastCtrl.create({
-        message: 'No hay registros articulos / sin conexion',
+        message: 'No hay registros ARTICULOS / sin conexion',
         duration: 1000,
         position: position
       });
