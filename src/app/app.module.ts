@@ -26,10 +26,13 @@ import { SQLite } from '@ionic-native/sqlite';
 
 import { ClienteApi, SDKModels, InternalStorage, LoopBackAuth, PedidoventadetalleApi, ArticuloApi, RubroApi, PedidoventaApi, UsuariosApi, DomicilioApi } from './shared/sdk';
 import { HttpClientModule } from '@angular/common/http';
+import { HomePage } from '../pages/home/home';
+import { DbControllerProvider } from '../providers/db-controller.provider';
 
 @NgModule({
   declarations: [
     MyApp,
+    HomePage,
     PedidoPage,
     ClientePage,
     ArticuloPage,
@@ -51,6 +54,7 @@ import { HttpClientModule } from '@angular/common/http';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    HomePage,
     PedidoPage,
     TabsPage,
     ClientePage,
@@ -69,7 +73,8 @@ import { HttpClientModule } from '@angular/common/http';
     ArticuloProvider,
     PedidoProvider,
     DetalleProvider,
-    DomicilioProvider
+    DomicilioProvider,
+    DbControllerProvider
   ]
 })
 export class AppModule { }

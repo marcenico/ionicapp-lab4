@@ -36,25 +36,37 @@ export class RubroProvider {
     return this.rubroApi.findById(id);
   }
 
-  createLocal(r: Rubro) {
-    let sql = 'INSERT INTO rubro(codigo, denominacion, created_at,  updated_at, rubro_padre_id) VALUES(?,?,?,?,?)';
-    return this.db.executeSql(sql, [r.codigo, r.denominacion, r.createdAt, r.updatedAt, r.rubroPadreId]);
+  createLocal(rubros: Rubro[]) {
+
+    for (const r of rubros) {
+      let sql = 'INSERT INTO rubro(id, codigo, denominacion, createdAt,  updatedAt, rubroPadreId) VALUES(?,?,?,?,?,?)';
+      this.db.executeSql(sql, [r.id, r.codigo, r.denominacion, r.createdAt, r.updatedAt, r.rubroPadreId])
+        .then(() => {
+          console.log("EXECUTED CREATED ", r)
+        }).catch(error => {
+          console.log(error);
+        });
+    }
+
   }
 
   createTableLocal() {
-    console.log("creando tabla rubro");
+    
     let sql =
-    `CREATE TABLE IF NOT exists rubro (
+      `CREATE TABLE IF NOT exists rubro (
         id int(10) NOT NULL,
         codigo varchar(45) NOT NULL,
         denominacion varchar(45) NOT NULL,
-        created_at timestamp NULL DEFAULT NULL,
-        updated_at timestamp NULL DEFAULT NULL,
-        rubro_padre_id int(10) DEFAULT NULL,
+        createdAt timestamp NULL DEFAULT NULL,
+        updatedAt timestamp NULL DEFAULT NULL,
+        rubroPadreId int(10) DEFAULT NULL,
         PRIMARY KEY (id),
-        CONSTRAINT rubro_padre_id FOREIGN KEY (rubro_padre_id) REFERENCES rubro (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT rubroPadreId FOREIGN KEY (rubroPadreId) REFERENCES rubro (id) ON DELETE NO ACTION ON UPDATE NO ACTION
       )`;
-    return this.db.executeSql(sql, []);
+    this.db.executeSql(sql, [])
+    .then(()=> console.log("creada tabla rubro"))
+    .catch(error => console.log(error));
+    
   }
 
   deleteLocal(r: Rubro) {
@@ -76,7 +88,7 @@ export class RubroProvider {
   }
 
   getAllWithRubroPadreLocal() {
-    let sql = 'SELECT * FROM rubro INNER JOIN rubro ON rubro.rubro_padre_id = rubro.id';
+    let sql = 'SELECT * FROM rubro INNER JOIN rubro ON rubro.rubroPadreId = rubro.id';
     return this.db.executeSql(sql, [])
       .then(response => {
         let rubro = [];
@@ -88,22 +100,22 @@ export class RubroProvider {
       .catch(error => Promise.reject(error));
   }
 
-  getAllById(id: any) {
-    let sql = `SELECT * FROM rubro WHERE id=${id}`;
+  getByIdLocal(id: any) {
+    let sql = `SELECT rubro.* FROM rubro WHERE id=${id}`;
     return this.db.executeSql(sql, [])
       .then(response => {
-        let pedido = [];
+        let rubro = [];
         for (let index = 0; index < response.rows.length; index++) {
-          pedido.push(response.rows.item(index));
+          rubro.push(response.rows.item(index));
         }
-        return Promise.resolve(pedido);
+        return Promise.resolve(rubro);
       })
       .catch(error => Promise.reject(error));
   }
 
   updateLocal(r: Rubro) {
-    let sql = `UPDATE rubro SET codigo=?, denominacion=?, created_at=?,  updated_at=?, rubro_padre_id=? WHERE id=?`;
-    return this.db.executeSql(sql, [r.codigo, r.denominacion, r.createdAt, r.updatedAt, r.rubroPadreId, r.id]);
+    let sql = `UPDATE rubro SET id=?, codigo=?, denominacion=?, createdAt=?,  updatedAt=?, rubroPadreId=? WHERE id=?`;
+    return this.db.executeSql(sql, [r.id, r.codigo, r.denominacion, r.createdAt, r.updatedAt, r.rubroPadreId, r.id]);
   }
 
 }

@@ -99,7 +99,9 @@ export class DomicilioProvider {
       updated_at timestamp NULL DEFAULT NULL,
       PRIMARY KEY (id)
     )`;
-    return this.db.executeSql(sql, []);
+    this.db.executeSql(sql, [])
+    .then(()=> console.log("creada tabla domicilio"))
+    .catch(error => console.log(error));
   }
 
   deleteLocal(d: Domicilio) {
@@ -121,8 +123,8 @@ export class DomicilioProvider {
   }
 
   updateLocal(d: Domicilio) {
-    let sql = `UPDATE domicilio SET calle=?, numero=?, localidad=?,  latitud=?, longitud=? WHERE id=?`;
-    return this.db.executeSql(sql, [d.calle, d.numero, d.localidad, d.latitud, d.longitud]);
+    let sql = `UPDATE domicilio SET id=? calle=?, numero=?, localidad=?,  latitud=?, longitud=? WHERE id=?`;
+    return this.db.executeSql(sql, [d.id, d.calle, d.numero, d.localidad, d.latitud, d.longitud]);
   }
 
 

@@ -4,11 +4,9 @@
     <ion-title>Registro de articulos</ion-title>
 
     <ion-buttons end>
-      <div *ngIf="canRetry">
         <button (click)="getAll()" ion-button color="dark" round>
           <ion-icon name="md-refresh"></ion-icon>
         </button>
-      </div>
     </ion-buttons>
 
   </ion-navbar>
@@ -22,6 +20,7 @@
   </ion-searchbar>
 
   <div *ngIf="_articulos.length > 0">
+    <br>
     <ion-list *ngFor="let a of _auxArticulos;  let i = index">
       <ion-item-divider>
 

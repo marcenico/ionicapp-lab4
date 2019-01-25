@@ -44,7 +44,9 @@ export class PedidoProvider {
       CONSTRAINT clienteId FOREIGN KEY (clienteId) REFERENCES cliente (id) ON DELETE CASCADE ON UPDATE CASCADE,
       CONSTRAINT domiicilio_id FOREIGN KEY (domicilioId) REFERENCES domicilio (id)
     )`;
-    return this.db.executeSql(sql, []);
+    this.db.executeSql(sql, [])
+    .then(()=> console.log("creada tabla pedido"))
+    .catch(error => console.log(error));
   }
 
   deleteLocal(p: Pedidoventa) {

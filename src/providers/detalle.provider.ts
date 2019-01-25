@@ -38,7 +38,9 @@ export class DetalleProvider {
       CONSTRAINT articuloId FOREIGN KEY (articuloId) REFERENCES articulo (id) ON DELETE NO ACTION ON UPDATE CASCADE,
       CONSTRAINT pedidoVentaId FOREIGN KEY (pedidoVentaId) REFERENCES pedidoventa (id) ON DELETE CASCADE ON UPDATE CASCADE
     )`;
-    return this.db.executeSql(sql, []);
+    this.db.executeSql(sql, [])
+    .then(()=> console.log("creada tabla detalle"))
+    .catch(error => console.log(error));
   }
 
   deleteLocal(d: Pedidoventadetalle) {

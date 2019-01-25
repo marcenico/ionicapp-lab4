@@ -37,7 +37,9 @@ export class ClienteProvider {
   createLocal(clientes: Cliente[]) {
     for (const c of clientes) {
       let sql = 'INSERT INTO cliente(id, razonSocial, cuit, saldo,  domicilioId) VALUES(?,?,?,?)';
-      return this.db.executeSql(sql, [c.id, c.razonSocial, c.cuit, c.saldo, c.domicilioId]);
+      this.db.executeSql(sql, [c.id, c.razonSocial, c.cuit, c.saldo, c.domicilioId])
+        .then(() => console.log("EXECUTED CREADO ", c)
+        ).catch(error => console.log(error));
     }
   }
 
@@ -53,7 +55,9 @@ export class ClienteProvider {
       PRIMARY KEY (id),
       CONSTRAINT domicilioId FOREIGN KEY (domicilioId) REFERENCES domicilio (id) ON UPDATE CASCADE
     )`;
-    return this.db.executeSql(sql, []);
+    this.db.executeSql(sql, [])
+    .then(()=> console.log("creada tabla cliente"))
+    .catch(error => console.log(error));
   }
 
   deleteLocal(p: Cliente) {
@@ -75,8 +79,8 @@ export class ClienteProvider {
   }
 
   updateLocal(c: Cliente) {
-    let sql = `UPDATE cliente SET razonSocial=?, cuit=?, saldo=?,  domicilioId=? WHERE id=?`;
-    return this.db.executeSql(sql, [c.razonSocial, c.cuit, c.saldo, c.domicilioId, c.id]);
+    let sql = `UPDATE cliente SET id=? razonSocial=?, cuit=?, saldo=?,  domicilioId=? WHERE id=?`;
+    return this.db.executeSql(sql, [c.id, c.razonSocial, c.cuit, c.saldo, c.domicilioId, c.id]);
   }
 
 

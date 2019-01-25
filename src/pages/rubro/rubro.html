@@ -5,11 +5,9 @@
     <ion-title>Registro de rubros</ion-title>
 
       <ion-buttons end>
-        <div *ngIf="canRetry">
           <button (click)="getAll()" ion-button color="dark" round>
             <ion-icon name="md-refresh"></ion-icon>
           </button>
-        </div>
       </ion-buttons>
 
   </ion-navbar>
@@ -23,6 +21,7 @@
       </ion-searchbar>
     
       <div *ngIf="_rubros.length > 0" class="list">
+        <br>
         <ion-list *ngFor="let r of _auxRubros;  let i = index">
      
           <ion-item-divider >        

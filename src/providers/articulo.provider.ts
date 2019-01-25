@@ -11,7 +11,7 @@ export class ArticuloProvider {
 
   constructor(
     private articuloApi: ArticuloApi
-    ) {
+  ) {
   }
 
   // public methods
@@ -34,15 +34,19 @@ export class ArticuloProvider {
     return this.articuloApi.findById(id);
   }
 
-  create(a: Articulo) {
-    let sql = 'INSERT INTO articulo(denominacion, codigo, precioCompra,  precioVenta, iva, createdAt , updatedAt, rubroId) VALUES(?,?,?,?,?,?,?,?)';
-    return this.db.executeSql(sql, [a.denominacion, a.codigo, a.precioCompra, a.precioVenta, a.iva, a.createdAt, a.updatedAt, a.rubroId]);
+  createLocal(articulos: Articulo[]) {
+    for (const a of articulos) {
+      let sql = 'INSERT INTO articulo(id, denominacion, codigo, precioCompra,  precioVenta, iva, createdAt , updatedAt, rubroId) VALUES(?,?,?,?,?,?,?,?,?)';
+      this.db.executeSql(sql, [a.id, a.denominacion, a.codigo, a.precioCompra, a.precioVenta, a.iva, a.createdAt, a.updatedAt, a.rubroId])
+        .then(() => console.log("EXECUTED CREADO ARTICULO ", a)
+        ).catch(error => console.log(error));
+    }
   }
 
   createTableLocal() {
     console.log("creando tabla articulo");
     let sql =
-    `CREATE TABLE IF NOT exists articulo (
+      `CREATE TABLE IF NOT exists articulo (
       id int(10) NOT NULL,
       denominacion varchar(45) NOT NULL,
       codigo varchar(45) NOT NULL,
@@ -55,7 +59,9 @@ export class ArticuloProvider {
       PRIMARY KEY (id),
       CONSTRAINT rubroId FOREIGN KEY (rubroId) REFERENCES rubro (id) ON DELETE CASCADE
     )`;
-    return this.db.executeSql(sql, []);
+    this.db.executeSql(sql, [])
+      .then(() => console.log("creada tabla articulo"))
+      .catch(error => console.log(error));
   }
 
   deleteLocal(a: Articulo) {
@@ -64,7 +70,7 @@ export class ArticuloProvider {
   }
 
   getAllLocal() {
-    let sql = `SELECT * FROM articulo INNER JOIN articulo ON articulo.rubroId = rubro.id`;
+    let sql = `SELECT * FROM articulo`;
     return this.db.executeSql(sql, [])
       .then(response => {
         let articulo = [];
@@ -77,8 +83,8 @@ export class ArticuloProvider {
   }
 
   updateLocal(a: Articulo) {
-    let sql = `UPDATE articulo SET denominacion=?, codigo=?, precioCompra=?,  precioVenta=?, iva=?, createdAt=?, updatedAt=?, rubroId=? WHERE id=?`;
-    return this.db.executeSql(sql, [a.denominacion, a.codigo, a.precioCompra, a.precioVenta, a.iva, a.createdAt, a.updatedAt, a.rubroId]);
+    let sql = `UPDATE articulo SET  id=?, denominacion=?, codigo=?, precioCompra=?,  precioVenta=?, iva=?, createdAt=?, updatedAt=?, rubroId=? WHERE id=?`;
+    return this.db.executeSql(sql, [a.id, a.denominacion, a.codigo, a.precioCompra, a.precioVenta, a.iva, a.createdAt, a.updatedAt, a.rubroId]);
   }
 
 }

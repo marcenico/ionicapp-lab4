@@ -1,14 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Articulo } from '../../app/shared/sdk';
-import { ArticuloProvider } from '../../providers/articulo.provider';
+import { DbControllerProvider } from '../../providers/db-controller.provider';
 
-/**
- * Generated class for the ArticuloPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -19,7 +13,6 @@ export class ArticuloPage {
 
   searchTerm: any = '';
   itTried: boolean = false;
-  canRetry: boolean = false;
 
   _articulos: Articulo[] = [];
   _auxArticulos: Articulo[] = [];
@@ -28,7 +21,7 @@ export class ArticuloPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public toastCtrl: ToastController,
-    private _articuloProvider: ArticuloProvider
+    private dbController: DbControllerProvider
   ) {
   }
 
@@ -44,37 +37,31 @@ export class ArticuloPage {
   }
 
   getAll() {
-    this._articuloProvider.getAll({ include: 'rubro' })
-      .subscribe(data => {
-        console.log("GET ALL ARTICULOS ", data);
-        this._auxArticulos = this._articulos = data;
-        this.itTried = true;
-        this.canRetry = false;
-        this.showToastTop(this._articulos);
-      }, error => {
-        this.itTried = true;
-        this.canRetry = true;
-        this.showToastTop(this._articulos);
-      });
+    if (this.dbController.getArticuloLocal() == null || this.dbController.getArticuloLocal().length <= 0) {
+      this.itTried = true;
+      this.showToastTop(this._articulos)
+    } else {
+      this._auxArticulos = this._articulos = [];
+      this._auxArticulos= this._articulos = this.dbController.getArticuloLocal();
+    }
   }
+
 
   showToastTop(array: any) {
     if (array.length <= 0) {
       let position = 'top';
-
       let toast = this.toastCtrl.create({
         message: 'No hay registros ARTICULOS / sin conexion',
         duration: 1000,
         position: position
       });
-
       toast.present(toast);
-
     }
   }
 
   setFilteredItems() {
     this._auxArticulos = this._articulos.filter(x => x.denominacion.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
+
 
 }
