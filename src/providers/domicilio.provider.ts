@@ -67,8 +67,8 @@ export class DomicilioProvider {
 
   createLocal(d: Domicilio[], c: Cliente[], index: number) {
     if (index < d.length) {
-      let sqlDomicilio = 'INSERT INTO domicilio(id, calle, numero, localidad,  latitud, longitud) VALUES(?,?,?,?,?,?)';
-      let sqlCliente = 'INSERT INTO cliente(id, razonSocial, cuit, saldo,  domicilioId) VALUES(?,?,?,?,?)';
+      let sqlDomicilio = 'INSERT INTO domicilio (id, calle, numero, localidad,  latitud, longitud) VALUES(?,?,?,?,?,?)';
+      let sqlCliente = 'INSERT INTO cliente (id, razonSocial, cuit, saldo,  domicilioId) VALUES(?,?,?,?,?)';
 
       this.db.executeSql(sqlDomicilio, [d[index].id, d[index].calle, d[index].numero, d[index].localidad, d[index].latitud, d[index].longitud])
         .then(() => {

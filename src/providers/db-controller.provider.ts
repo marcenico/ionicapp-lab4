@@ -7,7 +7,7 @@ import { DomicilioProvider } from './domicilio.provider';
 import { ClienteProvider } from './cliente.provider';
 import { PedidoProvider } from './pedido.provider';
 import { DetalleProvider } from './detalle.provider';
-import { Rubro, Articulo, Domicilio, Cliente } from '../app/shared/sdk';
+import { Rubro, Articulo, Domicilio, Cliente, Pedidoventadetalle, Pedidoventa } from '../app/shared/sdk';
 import { LoadingController, Loading, AlertController } from 'ionic-angular';
 
 @Injectable()
@@ -18,6 +18,8 @@ export class DbControllerProvider {
   articulos: Articulo[];
   domicilios: Domicilio[];
   clientes: Cliente[];
+  pedidos: Pedidoventa[];
+  detalles: Pedidoventadetalle[];
 
   constructor(
     public loadingCtrl: LoadingController,
@@ -88,6 +90,16 @@ export class DbControllerProvider {
     alert.present();
   }
 
+  showAlertLocal() {
+    this.loader.dismiss();
+    const alert = this.alertCtrl.create({
+      title: 'No tienes pedidos cargados!!',
+      subTitle: 'No se encontraron registros de pedidos',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
   //#region GET RUBROS
   getRubrosFromServer() {
     this._rubroProvider.getAll()
@@ -105,7 +117,7 @@ export class DbControllerProvider {
   getRubrosLocal() {
     this._rubroProvider.getAllLocal()
       .then(rubroLocal => {
-        if (rubroLocal != null || rubroLocal.length > 0) {
+        if (rubroLocal != null && rubroLocal.length > 0) {
           let jsonString = JSON.stringify(rubroLocal);
           let auxRubros = <Rubro[]>JSON.parse(jsonString);
           this.setRubroLocal(auxRubros)
@@ -118,6 +130,7 @@ export class DbControllerProvider {
       .catch(error => {
         console.log(error);
         this.showAlert();
+        this.getPedidosLocal();
       })
   }
   //#endregion
@@ -138,7 +151,7 @@ export class DbControllerProvider {
   getArticulosLocal() {
     this._articuloProvider.getAllLocal()
       .then(articuloLocal => {
-        if (articuloLocal != null || articuloLocal.length > 0) {
+        if (articuloLocal != null && articuloLocal.length > 0) {
           let jsonString = JSON.stringify(articuloLocal);
           let auxArticulos = <Articulo[]>JSON.parse(jsonString);
           console.log(auxArticulos);
@@ -151,6 +164,7 @@ export class DbControllerProvider {
       .catch(error => {
         console.log(error);
         this.showAlert();
+        this.getPedidosLocal();
       })
   }
   //#endregion
@@ -168,7 +182,7 @@ export class DbControllerProvider {
         }
         this.setClienteLocal(auxClientes)
         this._domicilioProvider.createLocal(this.getDomicilioLocal(), this.getClienteLocal(), 0);
-        this.loader.dismiss();
+        this.getPedidosLocal();
       }, error => {
         console.log(error);
         this.getClientesLocal();
@@ -178,12 +192,11 @@ export class DbControllerProvider {
   getClientesLocal() {
     this._clienteProvider.getAllLocal()
       .then(clienteLocal => {
-        if (clienteLocal != null || clienteLocal.length > 0) {
+        if (clienteLocal != null && clienteLocal.length > 0) {
           let jsonString = JSON.stringify(clienteLocal);
           let auxClientes = <Cliente[]>JSON.parse(jsonString);
           this.setClienteLocal(auxClientes)
-          // this.getClientesFromServer();
-          this.loader.dismiss();
+          this.getPedidosLocal();
         } else {
           this.showAlert();
         }
@@ -191,6 +204,47 @@ export class DbControllerProvider {
       .catch(error => {
         console.log(error);
         this.showAlert();
+        this.getPedidosLocal();
+      })
+  }
+  //#endregion
+
+  //#region GET PEDIDOS 
+  getPedidosLocal() {
+    this._pedidoProvider.getAllLocal()
+      .then(pedidosLocal => {
+        if (pedidosLocal != null && pedidosLocal.length > 0) {
+          let jsonString = JSON.stringify(pedidosLocal);
+          let auxPedidos = <Pedidoventa[]>JSON.parse(jsonString);
+          this.setPedidoLocal(auxPedidos);
+          this.getDetallesLocal();
+        } else {
+          this.showAlertLocal();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.showAlertLocal();
+      })
+  }
+  //#endregion
+
+  //#region GET DETALLES 
+  getDetallesLocal() {
+    this._detalleProvider.getAllLocal()
+      .then(detallesLocal => {
+        if (detallesLocal != null && detallesLocal.length > 0) {
+          let jsonString = JSON.stringify(detallesLocal);
+          let auxDetalles = <Pedidoventadetalle[]>JSON.parse(jsonString);
+          this.setDetalleLocal(auxDetalles);
+          this.loader.dismiss()
+        } else {
+          this.showAlertLocal();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.showAlertLocal();
       })
   }
   //#endregion
@@ -202,7 +256,8 @@ export class DbControllerProvider {
   }
 
   getRubroLocal() {
-    return this.rubros;
+    if (this.rubros != null)
+      return this.rubros;
   }
 
   setArticuloLocal(articuloLocal: Articulo[]) {
@@ -215,7 +270,8 @@ export class DbControllerProvider {
   }
 
   getArticuloLocal() {
-    return this.articulos;
+    if (this.articulos != null)
+      return this.articulos;
   }
 
   setDomicilioLocal(domicilioLocal: Domicilio[]) {
@@ -224,16 +280,38 @@ export class DbControllerProvider {
   }
 
   getDomicilioLocal() {
-    return this.domicilios;
+    if (this.domicilios != null)
+      return this.domicilios;
   }
 
   setClienteLocal(clienteLocal: Cliente[]) {
     this.clientes = clienteLocal;
-    console.log("CLIENTES SETEADOS ", this.domicilios);
+    console.log("CLIENTES SETEADOS ", this.clientes);
   }
 
   getClienteLocal() {
-    return this.clientes;
+    if (this.clientes != null)
+      return this.clientes;
+  }
+
+  setPedidoLocal(pedidoLocal: Pedidoventa[]) {
+    this.pedidos = pedidoLocal;
+    console.log("PEDIDOS LOCALES CARGADOS ", this.pedidos);
+  }
+
+  getPedidoLocal() {
+    if (this.pedidos != null)
+      return this.pedidos;
+  }
+
+  setDetalleLocal(detalleLocal: Pedidoventadetalle[]) {
+    this.detalles = detalleLocal;
+    console.log("DETALLES SETEADOS ", this.detalles);
+  }
+
+  getDetalleLocal() {
+    if (this.detalles != null)
+      return this.detalles;
   }
   //#endregion
 

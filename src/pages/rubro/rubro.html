@@ -1,14 +1,14 @@
 <ion-header>
 
   <ion-navbar color="navbar">
-      
+
     <ion-title>Registro de rubros</ion-title>
 
-      <ion-buttons end>
-          <button (click)="getAll()" ion-button color="dark" round>
-            <ion-icon name="md-refresh"></ion-icon>
-          </button>
-      </ion-buttons>
+    <ion-buttons end>
+      <button ion-button large (click)="getAll()">
+        <ion-icon name="md-sync"></ion-icon>
+      </button>
+    </ion-buttons>
 
   </ion-navbar>
 
@@ -17,24 +17,24 @@
 
 <ion-content padding>
 
-    <ion-searchbar placeholder="Buscar..." [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()">
-      </ion-searchbar>
-    
-      <div *ngIf="_rubros.length > 0" class="list">
-        <br>
-        <ion-list *ngFor="let r of _auxRubros;  let i = index">
-     
-          <ion-item-divider >        
-            <div item-start>
-              <b>{{i+1}}</b>
-            </div>
-            
-            <h2>{{r.denominacion}}</h2>
-            <p>Codigo: {{r.codigo}}</p>
-            
-          </ion-item-divider>
-       
-        </ion-list>
-      </div>
+  <ion-searchbar placeholder="Buscar..." [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()">
+  </ion-searchbar>
+
+  <div *ngIf="_rubros.length > 0" class="list">
+    <br>
+    <ion-list *ngFor="let r of _auxRubros;  let i = index">
+
+      <ion-item-divider>
+        <div item-start>
+          <b>{{i+1}}</b>
+        </div>
+
+        <h2>{{r.denominacion}}</h2>
+        <p>Codigo: {{r.codigo}}</p>
+
+      </ion-item-divider>
+
+    </ion-list>
+  </div>
 
 </ion-content>

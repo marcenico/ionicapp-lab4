@@ -4,11 +4,14 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 //#region PAGES
+import { HomePage } from '../pages/home/home';
 import { PedidoPage } from '../pages/pedido/pedido';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ClientePage } from '../pages/cliente/cliente';
 import { ArticuloPage } from '../pages/articulo/articulo';
 import { RubroPage } from '../pages/rubro/rubro';
+import { DetallePage } from '../pages/detalle/detalle';
+import { PedidosPage } from '../pages/pedidos/pedidos';
 //#endregion
 
 //#region PROVIDERS
@@ -18,6 +21,7 @@ import { RubroProvider } from '../providers/rubro.provider';
 import { PedidoProvider } from '../providers/pedido.provider';
 import { DetalleProvider } from '../providers//detalle.provider';
 import { DomicilioProvider } from '../providers/domicilio.provider';
+import { DbControllerProvider } from '../providers/db-controller.provider';
 //#endregion
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -26,24 +30,23 @@ import { SQLite } from '@ionic-native/sqlite';
 
 import { ClienteApi, SDKModels, InternalStorage, LoopBackAuth, PedidoventadetalleApi, ArticuloApi, RubroApi, PedidoventaApi, UsuariosApi, DomicilioApi } from './shared/sdk';
 import { HttpClientModule } from '@angular/common/http';
-import { HomePage } from '../pages/home/home';
-import { DbControllerProvider } from '../providers/db-controller.provider';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     PedidoPage,
+    DetallePage,
     ClientePage,
     ArticuloPage,
     RubroPage,
+    PedidosPage,
     TabsPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, {
-      backButtonText: 'Go Back',
-      iconMode: 'md',
+      backButtonText: '',
       modalEnter: 'modal-slide-in',
       modalLeave: 'modal-slide-out',
       tabsPlacement: 'bottom',
@@ -56,10 +59,12 @@ import { DbControllerProvider } from '../providers/db-controller.provider';
     MyApp,
     HomePage,
     PedidoPage,
+    DetallePage,
     TabsPage,
     ClientePage,
     RubroPage,
-    ArticuloPage
+    ArticuloPage,
+    PedidosPage
   ],
   providers: [
     StatusBar,

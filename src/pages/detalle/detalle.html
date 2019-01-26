@@ -1,0 +1,128 @@
+<ion-header>
+
+  <ion-navbar color="navbar">
+    <ion-title>Detalle de pedido</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <button ion-button small (click)="seeForm(true)" color="yellow">
+    Agregar detalle
+  </button>
+
+  <!-- FORMULARIO -->
+  <form *ngIf="showForm" [formGroup]="dForma" (ngSubmit)="addDetalle()">
+
+
+    <!-- Cantidad -->
+    <ion-item>
+      <ion-label stacked>Cantidad</ion-label>
+      <ion-input type="number" id="cantidad" placeholder="0" formControlName="cantidad" [(ngModel)]="detalle.cantidad"
+        (ionInput)="calculateSubtotal()" (ionChange)="calculateSubtotal()"></ion-input>
+    </ion-item>
+    <p style="color:rgb(213, 0, 0)">
+      <ng-container *ngFor="let validation of validation_messages.cantidad">
+        <div class="error-message" *ngIf="dForma.get('cantidad').hasError(validation.type) && (dForma.get('cantidad').dirty || dForma.get('cantidad').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+    </p>
+
+    <!-- Descuento -->
+    <ion-item>
+      <ion-label stacked>Descuento</ion-label>
+      <ion-input type="number" id="descuento" placeholder="0" formControlName="descuento" [(ngModel)]="detalle.porcentajeDescuento"
+        (ionInput)="calculateSubtotal()" (ionChange)="calculateSubtotal()"></ion-input>
+    </ion-item>
+    <p style="color:rgb(213, 0, 0)">
+      <ng-container *ngFor="let validation of validation_messages.descuento">
+        <div class="error-message" *ngIf="dForma.get('descuento').hasError(validation.type) && (dForma.get('descuento').dirty || dForma.get('descuento').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+    </p>
+
+
+    <!-- Articulo -->
+    <ion-list>
+      <ion-item>
+        <ion-label>Articulo</ion-label>
+        <ion-select formControlName="articulo" [(ngModel)]="detalle.articulo" submitText="Okay" cancelText="Cancelar"
+          (ionChange)="selectArticuloChange(detalle.articulo)">
+          <ion-option *ngFor="let a of articulos" [value]="a">{{a.denominacion}}</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <!-- Subtotal -->
+    <ion-item>
+      <ion-label stacked>Subtotal</ion-label>
+      <ion-input type="number" id="subTotal" placeholder="0" formControlName="subTotal" [(ngModel)]="detalle.subTotal"></ion-input>
+    </ion-item>
+    <p style="color:rgb(213, 0, 0)">
+      <ng-container *ngFor="let validation of validation_messages.subTotal">
+        <div class="error-message" *ngIf="dForma.get('subTotal').hasError(validation.type) && (dForma.get('subTotal').dirty || dForma.get('subTotal').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+    </p>
+
+
+    <div class="row justify-content-end">
+      <div class="col-2">
+        <button ion-button (click)="cancel()" type="button">Cancelar</button>
+      </div>
+      <div class="col-2">
+        <button ion-button [disabled]="!dForma.valid" class="btn btn-sm btn-outline-primary" type="submit">Guardar</button>
+      </div>
+    </div>
+  </form>
+
+  <div *ngIf="_detalles.length > 0" class="list">
+    <ion-list>
+
+      <br><br><br>
+      <ion-list-header>
+        <h2>Lista de detalles del pedido</h2>
+      </ion-list-header>
+
+      <ion-item-sliding *ngFor="let d of _detalles; let i = index" #slidingItem>
+        <ion-item>
+          <div item-start>
+            <p>{{i+1}}</p>
+          </div>
+
+          <h2> Cantidad: {{d.cantidad}} {{d.articulo.denominacion}}</h2>
+          <p> Subtotal: {{d.subTotal}}</p>
+        </ion-item>
+
+        <ion-item-options>
+          <button ion-button color="light" (click)="editRow(d, slidingItem)">
+            <ion-icon name="md-create"></ion-icon>
+            Editar
+          </button>
+          <button ion-button color="dark" (click)="deleteRow(d, slidingItem)">
+            <ion-icon name="md-trash"></ion-icon>
+            Borrar
+          </button>
+        </ion-item-options>
+
+      </ion-item-sliding>
+
+    </ion-list>
+  </div>
+
+</ion-content>
+
+<ion-footer no-shadow>
+  <div *ngIf="_detalles.length > 0">
+    <ion-toolbar position="bottom">
+      <ion-buttons end>
+        <button ion-button clear (click)="generatePedido()" color="primary">{{action}}</button>
+      </ion-buttons>
+    </ion-toolbar>
+  </div>
+</ion-footer>

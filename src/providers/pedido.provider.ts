@@ -20,15 +20,15 @@ export class PedidoProvider {
   }
 
   createLocal(p: Pedidoventa) {
-    let sql = 'INSERT INTO pedidoventa(nroPedido, fechaPedido, fechaEstimadaEntrega,  gastosEnvio, estado, entregado, subTotal, montoTotal, clienteId, domicilioId) VALUES(?,?,?,?,?,?,?,?,?,?)';
-    return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, p.clienteId, p.domicilioId]);
+    let sql = "INSERT INTO pedidoventa (nroPedido, fechaPedido, fechaEstimadaEntrega, gastosEnvio, estado, entregado, subTotal, montoTotal, migrado, clienteId, domicilioId) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+    return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, 0, p.clienteId, p.domicilioId]);
   }
 
   createTableLocal() {
     console.log("creando tabla pedido");
     let sql =
-      `CREATE TABLE IF NOT exists pedidoventa (
-      id int(10) NOT NULL,
+      `CREATE TABLE IF NOT exists pedidoventa(
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       nroPedido double NOT NULL,
       fechaPedido datetime NOT NULL,
       fechaEstimadaEntrega datetime DEFAULT NULL,
@@ -40,22 +40,21 @@ export class PedidoProvider {
       migrado tinyint(1) NOT NULL,
       clienteId int(10) NOT NULL,
       domicilioId int(10) NOT NULL,
-      PRIMARY KEY (id),
-      CONSTRAINT clienteId FOREIGN KEY (clienteId) REFERENCES cliente (id) ON DELETE CASCADE ON UPDATE CASCADE,
-      CONSTRAINT domiicilio_id FOREIGN KEY (domicilioId) REFERENCES domicilio (id)
-    )`;
+      CONSTRAINT clienteId FOREIGN KEY(clienteId) REFERENCES cliente(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      CONSTRAINT domiicilioId FOREIGN KEY(domicilioId) REFERENCES domicilio(id)
+      )`;
     this.db.executeSql(sql, [])
-    .then(()=> console.log("creada tabla pedido"))
-    .catch(error => console.log(error));
+      .then(() => console.log("creada tabla pedido"))
+      .catch(error => console.log(error));
   }
 
   deleteLocal(p: Pedidoventa) {
-    let sql = `DELETE FROM pedidoventa WHERE id=?`;
+    let sql = "DELETE FROM pedidoventa WHERE id=?";
     return this.db.executeSql(sql, [p.id]);
   }
 
   getAllLocal() {
-    let sql = 'SELECT * FROM pedidoventa INNER JOIN cliente ON pedidoventa.clienteId = cliente.id';
+    let sql = "SELECT * FROM pedidoventa INNER JOIN cliente ON pedidoventa.clienteId = cliente.id";
     return this.db.executeSql(sql, [])
       .then(response => {
         let pedido = [];
@@ -68,9 +67,26 @@ export class PedidoProvider {
   }
 
   updateLocal(p: Pedidoventa) {
-    let sql = `UPDATE pedidoventa SET nroPedido=?, fechaPedido=?, fechaEstimadaEntrega=?,  gastosEnvio=?, estado=?, entregado=?, subTotal=?, montoTotal=?, clienteId=?, domicilioId=? WHERE id=?`;
+    let sql = "UPDATE pedidoventa SET nroPedido=?, fechaPedido=?, fechaEstimadaEntrega=?,  gastosEnvio=?, estado=?, entregado=?, subTotal=?, montoTotal=?, clienteId=?, domicilioId=? WHERE id=?";
     return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, p.clienteId, p.domicilioId, p.id]);
   }
 
+  updateMigrarPedido(p: Pedidoventa, migrado: number) {
+    let sql = "UPDATE pedidoventa SET migrado=? WHERE id=?";
+    return this.db.executeSql(sql, [migrado, p.id]);
+  }
+
+  getLastInsertedId() {
+    let sql = "SELECT seq FROM sqlite_sequence WHERE name='pedidoventa'";
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        let seq = [];
+        for (let index = 0; index < response.rows.length; index++) {
+          seq.push(response.rows.item(index));
+        }
+        return Promise.resolve(seq);
+      })
+      .catch(error => Promise.reject(error));
+  }
 
 }

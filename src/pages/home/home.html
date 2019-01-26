@@ -1,12 +1,6 @@
-<!--
-  Generated template for the HomePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="dark">
     <ion-title>Home</ion-title>
   </ion-navbar>
 
@@ -15,4 +9,14 @@
 
 <ion-content padding>
   <button ion-button full (click)="importarData()">Importar datos</button>
+  <button ion-button full (click)="seePedidos()">Ver Pedidos</button>
+  <br>
+
+
+  <ion-fab right bottom>
+    <button ion-fab (click)="seeFormPedidos()" color="navbar">
+      <ion-icon name="md-add"></ion-icon>
+    </button>
+  </ion-fab>
+
 </ion-content>
