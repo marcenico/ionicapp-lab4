@@ -67,7 +67,7 @@ export class PedidosPage {
     let position = 'top';
     let toast = this.toastCtrl.create({
       message: 'No hay registros Pedidos / sin conexion',
-      duration: 1000,
+      duration: 2000,
       position: position
     });
     toast.present(toast);
