@@ -8,9 +8,21 @@
 
 
 <ion-content padding>
-  <button ion-button full (click)="importarData()">Importar datos</button>
-  <button ion-button full (click)="seePedidos()">Ver Pedidos</button>
-  <br>
+  <button ion-button (click)="importarData()" style="text-transform: none;" round>
+    Importar datos
+    <ion-icon class="button" name="md-cloud-download"></ion-icon>
+  </button>
+
+  <ion-grid>
+    <ion-row align-items-end>
+      <ion-col></ion-col>
+      <ion-col col-10>
+        <img src="../../assets/imgs/logoutn.png" />
+      </ion-col>
+      <ion-col><br><br><br><br><br><br><br><br><br></ion-col>
+    </ion-row>
+  </ion-grid>
+
 
 
   <ion-fab right bottom>

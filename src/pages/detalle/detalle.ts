@@ -5,6 +5,9 @@ import { Pedidoventadetalle, Articulo, Pedidoventa } from '../../app/shared/sdk'
 import { StringsRegex } from '../../wrappers/StringsRegex';
 import { DbControllerProvider } from '../../providers/db-controller.provider';
 import { PedidoPage } from '../pedido/pedido';
+import { DetalleProvider } from '../../providers/detalle.provider';
+import { ArticuloProvider } from '../../providers/articulo.provider';
+import { Pedidos } from '../../wrappers/Pedidos';
 
 @IonicPage()
 @Component({
@@ -15,21 +18,21 @@ export class DetallePage {
 
   dForma: FormGroup;
   showForm: boolean = false;
-  tieneDetalle: boolean = false;
-  id: string = '';
+  id: any;
   action: string;
-  updateId: string = '';
-
+  detallesParaBorrar: Pedidoventadetalle[] = [];
+  detallesParaActualizar: Pedidoventadetalle[] = [];
   _detalles: Array<Pedidoventadetalle> = [];
   private articulos: Articulo[] = [];
   private detalle: Pedidoventadetalle;
   private aux: Pedidoventadetalle = new Pedidoventadetalle();
-
-  private pedidoForEdit: Pedidoventa;
+  private pedidoForEdit: Pedidos = new Pedidos();
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private detalleProvider: DetalleProvider,
+    private articuloProvider: ArticuloProvider,
     private dbController: DbControllerProvider,
     private formBuilder: FormBuilder,
   ) {
@@ -42,12 +45,30 @@ export class DetallePage {
     if (this.id == '' || this.id == null) {
       this.action = "Generar Pedido";
     } else {
+      this.action = "Actualizar Pedido";
+      this.detallesParaBorrar = [];
       this.pedidoForEdit = this.navParams.get('pedido');
-      console.log("PEDIDO PARA EDITAR", this.pedidoForEdit);
+      this.detalleProvider.getLocalById(this.id)
+        .then(detallesLocal => {
+          if (detallesLocal != null && detallesLocal.length > 0) {
+            let jsonString = JSON.stringify(detallesLocal);
+            let auxDetalles = <Pedidoventadetalle[]>JSON.parse(jsonString);
+            for (let i = 0; i < auxDetalles.length; i++) {
+              this.articuloProvider.getLocalArticuloById(auxDetalles[i].articuloId)
+                .then(data => {
+                  let jsonString = JSON.stringify(data);
+                  console.log(jsonString);
+                  let articulo = <Articulo[]>JSON.parse(jsonString);
+                  auxDetalles[i].articulo = articulo[0];
+
+                })
+            }
+            this._detalles = auxDetalles;
+          }
+        })
+        .catch(error => console.log(error))
     }
-
     this.validarFormulario();
-
   }
 
   private validarFormulario() {
@@ -62,20 +83,17 @@ export class DetallePage {
 
   private setDefaultForm() {
     this.detalle = new Pedidoventadetalle();
-    this.detalle.pedidoventa = new Pedidoventa();
     this.detalle.cantidad = 1;
     this.detalle.subTotal = 0;
     this.detalle.porcentajeDescuento = 0;
-    this.updateId = '';
   }
 
   private setFormValues(data: Pedidoventadetalle) {
     console.log(data);
-    this.updateId = data.id.toString();
     this.dForma.get('cantidad').setValue(data.cantidad);
     this.dForma.get('descuento').setValue(data.porcentajeDescuento);
     this.dForma.get('subTotal').setValue(data.subTotal);
-    this.setSelectedArticulo(data.articulo);
+    this.setSelectedArticulo(data.articuloId);
     this.detalle = data;
   }
 
@@ -84,9 +102,9 @@ export class DetallePage {
     this.calculateSubtotal();
   }
 
-  private setSelectedArticulo(articulo: Articulo) {
-    if (articulo != null) {
-      this.dForma.get('articulo').setValue(articulo);
+  private setSelectedArticulo(articuloId: number) {
+    if (articuloId != null) {
+      this.dForma.get('articulo').setValue(articuloId);
     } else {
       this.dForma.get('articulo').setValue(null);
     }
@@ -104,18 +122,20 @@ export class DetallePage {
   }
 
   addDetalle() {
-    if (this.updateId != '') {
-      this.aux = this._detalles.find(x => x.id == parseInt(this.updateId));
-      let index = this._detalles.indexOf(this.aux);
-      this.detalle.id = parseInt(this.updateId);
-      this._detalles[index] = this.detalle;
-    } else {
-      this.detalle.id = this._detalles.length + 1;
+    if (this.id == '') { //Agregando nuevo detalle al arreglo
       this._detalles.push(this.detalle);
+      this.seeForm(false);
+      console.log(this._detalles);
+    } else {
+
+      for (let i = 0; i < this._detalles.length; i++) {
+        if (this._detalles[i].id == this.detalle.id) {
+          this._detalles[i] = this.detalle;
+          this.detallesParaActualizar.push(this.detalle);
+        }
+      }
+      this.seeForm(false);
     }
-    this.seeForm(false);
-    this.updateId = '';
-    console.log(this._detalles);
   }
 
   seeForm(v: boolean) {
@@ -130,8 +150,18 @@ export class DetallePage {
         this._detalles.splice(i, 1);
       }
     }
-    if (this._detalles.length <= 0) this.tieneDetalle = false;
+
+    for (let i = 0; i < this.detallesParaActualizar.length; ++i) {
+      if (this.detallesParaActualizar[i].id === refDetalle.id) {
+        this.detallesParaActualizar.splice(i, 1);
+      }
+    }
+
     slidingItem.close();
+
+    if (this.id != '') {
+      this.detallesParaBorrar.push(refDetalle)
+    }
   }
 
   editRow(refDetalle: Pedidoventadetalle, slidingItem: ItemSliding) {
@@ -147,10 +177,20 @@ export class DetallePage {
   }
 
   generatePedido() {
-    this.dbController.setDetalleLocal(this._detalles);
-    this.navCtrl.push(PedidoPage, {
-      id: ''
-    });
+    if (this.id == '') {
+      this.navCtrl.push(PedidoPage, {
+        id: '',
+        detalles: this._detalles
+      });
+    } else {
+      this.navCtrl.push(PedidoPage, {
+        id: this.pedidoForEdit.id,
+        detalles: this._detalles,
+        pedidoForEdit: this.pedidoForEdit,
+        detallesParaBorrar: this.detallesParaBorrar,
+        detallesParaActualizar: this.detallesParaActualizar
+      });
+    }
   }
 
   //#region MENSAJES DE VALIDACION

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, IonicApp, DateTime } from 'ionic-angular';
+import { NavController, NavParams, DateTime } from 'ionic-angular';
 import { Pedidoventa, Pedidoventadetalle, Cliente } from '../../app/shared/sdk';
 import { DbControllerProvider } from '../../providers/db-controller.provider';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
@@ -8,9 +8,8 @@ import { DatesExtension } from '../../wrappers/DatesExtension';
 import { PedidoProvider } from '../../providers/pedido.provider';
 import { DetalleProvider } from '../../providers/detalle.provider';
 import moment from 'moment';
-import { HomePage } from '../home/home';
-import { last } from 'rxjs/operators';
 import { Seq } from '../../wrappers/Seq';
+import { Pedidos } from '../../wrappers/Pedidos';
 
 @Component({
   selector: 'page-pedido',
@@ -21,15 +20,10 @@ export class PedidoPage {
   form: FormGroup;
   id: string;
   action: string;
-  isNew: boolean = false;
   isBigger: boolean = false;
-  seeTimePickerP: boolean = false;
-  seeDatePickerP: boolean = true;
-  seeTimePickerE: boolean = false;
-  seeDatePickerE: boolean = true;
 
-  showCalendar: boolean = false;
-  showCalendar2: boolean = false;
+  datesP: String = '';
+  datesE: String = '';
 
   estados = [
     { id: 1, name: "Pendiente" },
@@ -38,11 +32,11 @@ export class PedidoPage {
     { id: 4, name: "Anulado" }
   ];
 
-  private pedido: Pedidoventa = new Pedidoventa();
-  private _clientes: Array<Cliente> = [];
-  private _detalles: Array<Pedidoventadetalle> = [];
-  private auxPedidos: Array<Pedidoventa> = [];
-  private auxDetalles: Array<Pedidoventadetalle> = [];
+  private detallesParaBorrar: Pedidoventadetalle[] = [];
+  private detallesParaActualizar: Pedidoventadetalle[] = [];
+  private pedido: Pedidos = new Pedidos();
+  private _clientes: Cliente[] = [];
+  private _detalles: Pedidoventadetalle[] = [];
 
 
   constructor(
@@ -54,28 +48,30 @@ export class PedidoPage {
     private formBuilder: FormBuilder
   ) {
     this.validarFormulario();
-
   }
 
   ionViewDidLoad() {
-    this._detalles = this.dbController.getDetalleLocal();
     this._clientes = this.dbController.getClienteLocal();
-    this.auxPedidos = this.dbController.getPedidoLocal();
-    this.auxDetalles = this.dbController.getDetalleLocal();
-
     this.id = this.navParams.get('id');
+    this._detalles = this.navParams.get('detalles');
+    this.pedido = this.navParams.get('pedidoForEdit');
+    this.detallesParaBorrar = this.navParams.get('detallesParaBorrar');
+    this.detallesParaActualizar = this.navParams.get('detallesParaActualizar');
     this.armarPedido();
   }
 
   armarPedido() {
     if (this.id == '') {
-      this.pedido.pedido_venta_detalle = this.dbController.getDetalleLocal();
       this.action = "Nuevo Pedido";
       this.pedido.gastosEnvio = 0.0;
       this.pedido.nroPedido = 0;
       this.calcularSubTotalYMontoTotal();
     } else {
-
+      this.action = "Actualizar Pedido";
+      this.datesP = new Date(this.pedido.fechaPedido + ' UTC').toISOString();
+      this.datesE = new Date(this.pedido.fechaEstimadaEntrega + ' UTC').toISOString();
+      this.compararFechas()
+      this.calcularSubTotalYMontoTotal();
     }
 
   }
@@ -84,9 +80,7 @@ export class PedidoPage {
     this.form = this.formBuilder.group({
       nroPedido: new FormControl('', [Validators.required, Validators.pattern(StringsRegex.onlyIntegerNumbers)]),
       fechaDatePedido: new FormControl('', [Validators.required]),
-      fechaTimePedido: new FormControl('', [Validators.required]),
       fechaDateEntrega: new FormControl('', [Validators.required]),
-      fechaTimeEntrega: new FormControl('', [Validators.required]),
       gastosEnvio: new FormControl('', [Validators.required, Validators.pattern(StringsRegex.noNegative)]),
       estado: new FormControl('', [Validators.required]),
       entregado: new FormControl('', []),
@@ -117,32 +111,35 @@ export class PedidoPage {
           console.log("pedido creado");
           this.pedidoProvider.getLastInsertedId()
             .then(lastID => {
-              this._detalles
-                .map(detalle => {
-                  let jsonString = JSON.stringify(lastID);
-                  let auxSeq = <Seq[]>JSON.parse(jsonString);
-                  console.log(auxSeq);
-                  detalle.pedidoVentaId = auxSeq[0].seq;
-                  console.log(detalle.pedidoVentaId);
-                  this.detalleProvider.createLocal(detalle)
-                    .then(() => {
-                      console.log("detalle de pedido creado");
-                      this.auxPedidos.push(this.pedido)
-                      this.auxDetalles.push(detalle)
-                      this.dbController.setPedidoLocal(this.auxPedidos);
-                      this.dbController.setDetalleLocal(this.auxDetalles);
-                      this.auxPedidos.slice(this.auxPedidos.length - 1, 1)
-                      this.auxDetalles.splice(this.auxDetalles.length - 1, 1)
-                      this.navCtrl.popToRoot();
-                    })
-                    .catch(error => { console.log(error) })
-                })
+              let jsonString = JSON.stringify(lastID);
+              let auxSeq = <Seq[]>JSON.parse(jsonString);
+              this.pedido.id = auxSeq[0].seq;
+              this.dbController.setPedidoLocal(this.pedido);
+              this.detalleProvider.createManyLocal(this._detalles, this.pedido.id)
+              this.navCtrl.popToRoot();
             })
             .catch(error => { console.log(error) })
         })
         .catch(error => { console.log(error) })
     } else {
       //Actualizando pedido
+      this.pedidoProvider.updateLocal(this.pedido)
+        .then(() => {
+          console.log("pedido actualizado");
+          this.pedidoProvider.getAllLocal()
+            .then(pedidosLocal => {
+              if (pedidosLocal != null && pedidosLocal.length > 0) {
+                this.detalleProvider.updateMany(this.detallesParaActualizar)
+                this.detalleProvider.deleteLocalMany(this.detallesParaBorrar);
+                let jsonString = JSON.stringify(pedidosLocal);
+                let auxPedidos = <Pedidos[]>JSON.parse(jsonString);
+                this.dbController.setPedidoLocalArray(auxPedidos);
+                this.navCtrl.popToRoot();
+              }
+            })
+            .catch(error => { console.log(error); })
+        })
+        .catch(error => { console.log(error) })
     }
   }
 
@@ -166,21 +163,13 @@ export class PedidoPage {
   }
 
   //#region CONTROL DE LA FECHA DE PEDIDO
-  showTimePickerP(time: DateTime) {
-    this.seeTimePickerP = true;
-    this.seeDatePickerP = false;
-    time.open();
-  }
-
-  hideTimePickerP(date: DateTime, time: DateTime, dateE: DateTime) {
-    this.seeTimePickerP = false;
-    this.seeDatePickerP = true;
+  setDateP(date: DateTime, dateE: DateTime) {
     let year: string, month: string, day: string, hours: string, min: string;
     year = date.value.year.toString();
     month = (date.value.month < 10) ? `0${date.value.month}` : `${date.value.month}`;
     day = (date.value.day < 10) ? `0${date.value.day}` : `${date.value.day}`;
-    hours = (time.value.hour < 10) ? `0${time.value.hour}` : `${time.value.hour}`;
-    min = (time.value.minute < 10) ? `0${time.value.minute}` : `${time.value.minute}`;
+    hours = (date.value.hour < 10) ? `0${date.value.hour}` : `${date.value.hour}`;
+    min = (date.value.minute < 10) ? `0${date.value.minute}` : `${date.value.minute}`;
     let dateTime = `${year}-${month}-${day}T${hours}:${min}:00`
     this.pedido.fechaPedido = moment(dateTime).toDate();
     dateE.min = dateTime;
@@ -189,21 +178,13 @@ export class PedidoPage {
   //#endregion
 
   //#region CONTROL DE LA FECHA DE ENTREGA
-  showTimePickerE(time: DateTime) {
-    this.seeTimePickerE = true;
-    this.seeDatePickerE = false;
-    time.open();
-  }
-
-  hideTimePickerE(date: DateTime, time: DateTime) {
-    this.seeTimePickerE = false;
-    this.seeDatePickerE = true;
+  setDateE(date: DateTime) {
     let year: string, month: string, day: string, hours: string, min: string;
     year = date.value.year.toString();
     month = (date.value.month < 10) ? `0${date.value.month}` : `${date.value.month}`;
     day = (date.value.day < 10) ? `0${date.value.day}` : `${date.value.day}`;
-    hours = (time.value.hour < 10) ? `0${time.value.hour}` : `${time.value.hour}`;
-    min = (time.value.minute < 10) ? `0${time.value.minute}` : `${time.value.minute}`;
+    hours = (date.value.hour < 10) ? `0${date.value.hour}` : `${date.value.hour}`;
+    min = (date.value.minute < 10) ? `0${date.value.minute}` : `${date.value.minute}`;
     let dateTime = `${year}-${month}-${day}T${hours}:${min}:00`
     this.pedido.fechaEstimadaEntrega = moment(dateTime).toDate();
     this.compararFechas();

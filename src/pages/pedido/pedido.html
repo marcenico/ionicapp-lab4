@@ -24,13 +24,8 @@
     <!-- Fecha Pedido -->
     <ion-item>
       <ion-label>Fecha de pedido</ion-label>
-
-      <ion-datetime [hidden]="!seeDatePickerP" #dateP formControlName="fechaDatePedido" display-formt="YYYY-MM-DDTHH:mm"
-        (ionChange)="showTimePickerP(timeP)"></ion-datetime>
-
-      <ion-datetime [hidden]="!seeTimePickerP" #timeP formControlName="fechaTimePedido" displayFormat="HH:mm A"
-        minuteValues="00,15,30,45" (ionChange)="hideTimePickerP(dateP, timeP, dateE)"></ion-datetime>
-      <ion-label></ion-label>
+      <ion-datetime #dateP formControlName="fechaDatePedido" displayFormat='YYYY-MM-DD HH:mm'
+        pickerFormat='YYYY-MM-DD HH:mm' (ionChange)="setDateP(dateP, dateE)" [(ngModel)]="datesP"></ion-datetime>
     </ion-item>
 
     <p style="color:rgb(213, 0, 0)">
@@ -40,25 +35,13 @@
         </div>
       </ng-container>
     </p>
-    <p style="color:rgb(213, 0, 0)">
-      <ng-container *ngFor="let validation of validation_messages.requiredOnly">
-        <div class="error-message" *ngIf="form.get('fechaTimePedido').hasError(validation.type) && (form.get('fechaTimePedido').dirty || form.get('fechaTimePedido').touched)">
-          {{ validation.message }}
-        </div>
-      </ng-container>
-    </p>
     <!-- <label> {{ pedido.fechaPedido | date:'short'}}</label> -->
 
     <!-- Fecha Entrega -->
     <ion-item>
       <ion-label>Fecha de entrega</ion-label>
-
-      <ion-datetime [hidden]="!seeDatePickerE" #dateE formControlName="fechaDateEntrega" display-formt="YYYY-MM-DDTHH:mm"
-        (ionChange)="showTimePickerE(timeE)"></ion-datetime>
-
-      <ion-datetime [hidden]="!seeTimePickerE" #timeE formControlName="fechaTimeEntrega" displayFormat="HH:mm A"
-        minuteValues="00,15,30,45" (ionChange)="hideTimePickerE(dateE, timeE)"></ion-datetime>
-      <ion-label></ion-label>
+      <ion-datetime #dateE formControlName="fechaDateEntrega" displayFormat='YYYY-MM-DD HH:mm'
+        pickerFormat='YYYY-MM-DD HH:mm' (ionChange)="setDateE(dateE)" [(ngModel)]="datesE"></ion-datetime>
     </ion-item>
 
     <p style="color:rgb(213, 0, 0)">
@@ -72,13 +55,6 @@
     <div *ngIf="!isBigger">
       <p style="color:rgb(213, 0, 0)">* La fecha de entrega debe ser mayor a la del pedido</p>
     </div>
-    <p style="color:rgb(213, 0, 0)">
-      <ng-container *ngFor="let validation of validation_messages.requiredOnly">
-        <div class="error-message" *ngIf="form.get('fechaTimeEntrega').hasError(validation.type) && (form.get('fechaTimeEntrega').dirty || form.get('fechaTimeEntrega').touched)">
-          {{ validation.message }}
-        </div>
-      </ng-container>
-    </p>
     <!-- <label> {{ pedido.fechaEstimadaEntrega | date:'short'}}</label> -->
 
     <!-- Gastos de envio -->
@@ -110,8 +86,9 @@
     <ion-list>
       <ion-item>
         <ion-label>Cliente</ion-label>
-        <ion-select formControlName="cliente" (ionChange)="setCliente(pedido.cliente)" [(ngModel)]="pedido.cliente" submitText="Okay" cancelText="Cancelar">
-          <ion-option *ngFor="let c of _clientes" [value]="c">{{c.razonSocial}}</ion-option>
+        <ion-select formControlName="cliente" (ionChange)="setCliente(pedido.cliente)" [(ngModel)]="pedido.clienteId"
+          submitText="Okay" cancelText="Cancelar">
+          <ion-option *ngFor="let c of _clientes" [value]="c.id">{{c.razonSocial}}</ion-option>
         </ion-select>
       </ion-item>
     </ion-list>

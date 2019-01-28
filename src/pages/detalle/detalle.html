@@ -52,7 +52,7 @@
         <ion-label>Articulo</ion-label>
         <ion-select formControlName="articulo" [(ngModel)]="detalle.articulo" submitText="Okay" cancelText="Cancelar"
           (ionChange)="selectArticuloChange(detalle.articulo)">
-          <ion-option *ngFor="let a of articulos" [value]="a">{{a.denominacion}}</ion-option>
+          <ion-option *ngFor="let a of articulos" [value]="a.id">{{a.denominacion}}</ion-option>
         </ion-select>
       </ion-item>
     </ion-list>
@@ -95,7 +95,7 @@
             <p>{{i+1}}</p>
           </div>
 
-          <h2> Cantidad: {{d.cantidad}} {{d.articulo.denominacion}}</h2>
+          <h2> Cantidad de articulos: {{d.cantidad}}</h2>
           <p> Subtotal: {{d.subTotal}}</p>
         </ion-item>
 

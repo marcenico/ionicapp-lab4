@@ -82,6 +82,19 @@ export class ArticuloProvider {
       .catch(error => Promise.reject(error));
   }
 
+  getLocalArticuloById(articuloId: number) {
+    let sql = `SELECT * FROM articulo WHERE id = ${articuloId}`;
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        let articulo = [];
+        for (let index = 0; index < response.rows.length; index++) {
+          articulo.push(response.rows.item(index));
+        }
+        return Promise.resolve(articulo);
+      })
+      .catch(error => Promise.reject(error));
+  }
+
   updateLocal(a: Articulo) {
     let sql = `UPDATE articulo SET  id=?, denominacion=?, codigo=?, precioCompra=?,  precioVenta=?, iva=?, createdAt=?, updatedAt=?, rubroId=? WHERE id=?`;
     return this.db.executeSql(sql, [a.id, a.denominacion, a.codigo, a.precioCompra, a.precioVenta, a.iva, a.createdAt, a.updatedAt, a.rubroId]);

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 import { RubroProvider } from './rubro.provider';
@@ -9,17 +8,18 @@ import { PedidoProvider } from './pedido.provider';
 import { DetalleProvider } from './detalle.provider';
 import { Rubro, Articulo, Domicilio, Cliente, Pedidoventadetalle, Pedidoventa } from '../app/shared/sdk';
 import { LoadingController, Loading, AlertController } from 'ionic-angular';
+import { Pedidos } from '../wrappers/Pedidos';
 
 @Injectable()
 export class DbControllerProvider {
 
   loader: Loading;
-  rubros: Rubro[];
-  articulos: Articulo[];
-  domicilios: Domicilio[];
-  clientes: Cliente[];
-  pedidos: Pedidoventa[];
-  detalles: Pedidoventadetalle[];
+  rubros: Rubro[] = [];
+  articulos: Articulo[] = [];
+  domicilios: Domicilio[] = [];
+  clientes: Cliente[] = [];
+  pedidos: Pedidos[] = [];
+  detalles: Pedidoventadetalle[] = [];
 
   constructor(
     public loadingCtrl: LoadingController,
@@ -215,8 +215,8 @@ export class DbControllerProvider {
       .then(pedidosLocal => {
         if (pedidosLocal != null && pedidosLocal.length > 0) {
           let jsonString = JSON.stringify(pedidosLocal);
-          let auxPedidos = <Pedidoventa[]>JSON.parse(jsonString);
-          this.setPedidoLocal(auxPedidos);
+          let auxPedidos = <Pedidos[]>JSON.parse(jsonString);
+          this.setPedidoLocalArray(auxPedidos);
           this.getDetallesLocal();
         } else {
           this.showAlertLocal();
@@ -236,7 +236,7 @@ export class DbControllerProvider {
         if (detallesLocal != null && detallesLocal.length > 0) {
           let jsonString = JSON.stringify(detallesLocal);
           let auxDetalles = <Pedidoventadetalle[]>JSON.parse(jsonString);
-          this.setDetalleLocal(auxDetalles);
+          this.setDetalleLocalArray(auxDetalles);
           this.loader.dismiss()
         } else {
           this.showAlertLocal();
@@ -294,9 +294,21 @@ export class DbControllerProvider {
       return this.clientes;
   }
 
-  setPedidoLocal(pedidoLocal: Pedidoventa[]) {
+  setPedidoLocalArray(pedidoLocal: Pedidos[]) {
     this.pedidos = pedidoLocal;
     console.log("PEDIDOS LOCALES CARGADOS ", this.pedidos);
+  }
+
+  setPedidoLocal(pedidoLocal: Pedidos) {
+    this.pedidos.push(pedidoLocal);
+    console.log("PEDIDO CARGADO ", this.pedidos);
+  }
+
+  setUpdatePedidoLocal(pedidoLocal: Pedidos) {
+    for (let i = 0; i < this.pedidos.length; i++) {
+      if (this.pedidos[i].id == pedidoLocal.id)
+        this.pedidos[i] = pedidoLocal;
+    }
   }
 
   getPedidoLocal() {
@@ -304,8 +316,8 @@ export class DbControllerProvider {
       return this.pedidos;
   }
 
-  setDetalleLocal(detalleLocal: Pedidoventadetalle[]) {
-    this.detalles = detalleLocal;
+  setDetalleLocalArray(detallesLocal: Pedidoventadetalle[]) {
+    this.detalles = detallesLocal;
     console.log("DETALLES SETEADOS ", this.detalles);
   }
 

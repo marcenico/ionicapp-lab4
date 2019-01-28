@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SQLiteObject } from '@ionic-native/sqlite';
-import { Pedidoventa } from '../app/shared/sdk';
+import { Pedidos } from '../wrappers/Pedidos';
+import { Pedidoventa, PedidoventaApi } from '../app/shared/sdk';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class PedidoProvider {
@@ -10,7 +12,7 @@ export class PedidoProvider {
 
   db: SQLiteObject = null;
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient, private pedidoventaApi: PedidoventaApi) { }
 
   // public methods
   setDatabase(db: SQLiteObject) {
@@ -19,7 +21,15 @@ export class PedidoProvider {
     }
   }
 
-  createLocal(p: Pedidoventa) {
+  createInServer(data: Pedidos): Observable<Pedidoventa> {
+    let pedidoVentaData: Pedidoventa = new Pedidoventa();
+    let jsonString = JSON.stringify(data);
+    pedidoVentaData = <Pedidoventa>JSON.parse(jsonString);
+    pedidoVentaData.id = null;
+    return this.pedidoventaApi.create(pedidoVentaData);
+  }
+
+  createLocal(p: Pedidos) {
     let sql = "INSERT INTO pedidoventa (nroPedido, fechaPedido, fechaEstimadaEntrega, gastosEnvio, estado, entregado, subTotal, montoTotal, migrado, clienteId, domicilioId) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, 0, p.clienteId, p.domicilioId]);
   }
@@ -48,13 +58,13 @@ export class PedidoProvider {
       .catch(error => console.log(error));
   }
 
-  deleteLocal(p: Pedidoventa) {
+  deleteLocal(p: Pedidos) {
     let sql = "DELETE FROM pedidoventa WHERE id=?";
     return this.db.executeSql(sql, [p.id]);
   }
 
   getAllLocal() {
-    let sql = "SELECT * FROM pedidoventa INNER JOIN cliente ON pedidoventa.clienteId = cliente.id";
+    let sql = "SELECT * FROM pedidoventa";
     return this.db.executeSql(sql, [])
       .then(response => {
         let pedido = [];
@@ -66,12 +76,12 @@ export class PedidoProvider {
       .catch(error => Promise.reject(error));
   }
 
-  updateLocal(p: Pedidoventa) {
+  updateLocal(p: Pedidos) {
     let sql = "UPDATE pedidoventa SET nroPedido=?, fechaPedido=?, fechaEstimadaEntrega=?,  gastosEnvio=?, estado=?, entregado=?, subTotal=?, montoTotal=?, clienteId=?, domicilioId=? WHERE id=?";
     return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, p.clienteId, p.domicilioId, p.id]);
   }
 
-  updateMigrarPedido(p: Pedidoventa, migrado: number) {
+  updateMigrarPedido(p: Pedidos, migrado: number) {
     let sql = "UPDATE pedidoventa SET migrado=? WHERE id=?";
     return this.db.executeSql(sql, [migrado, p.id]);
   }
