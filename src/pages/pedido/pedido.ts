@@ -22,8 +22,8 @@ export class PedidoPage {
   action: string;
   isBigger: boolean = false;
 
-  datesP: String = '';
-  datesE: String = '';
+  datesP: String = null;
+  datesE: String = null;
 
   estados = [
     { id: 1, name: "Pendiente" },
@@ -36,7 +36,9 @@ export class PedidoPage {
   private detallesParaActualizar: Pedidoventadetalle[] = [];
   private pedido: Pedidos = new Pedidos();
   private _clientes: Cliente[] = [];
+  private _cliente: Cliente = new Cliente();
   private _detalles: Pedidoventadetalle[] = [];
+  private detallesNuevosParaCrear: Pedidoventadetalle[] = [];
 
 
   constructor(
@@ -48,28 +50,29 @@ export class PedidoPage {
     private formBuilder: FormBuilder
   ) {
     this.validarFormulario();
+    this.id = this.navParams.get('id');
+    this._detalles = this.navParams.get('detalles');
+    this.detallesParaBorrar = this.navParams.get('detallesParaBorrar');
+    this.detallesParaActualizar = this.navParams.get('detallesParaActualizar');
+    this.detallesNuevosParaCrear = this.navParams.get('detallesNuevosParaCrear');
   }
 
   ionViewDidLoad() {
     this._clientes = this.dbController.getClienteLocal();
-    this.id = this.navParams.get('id');
-    this._detalles = this.navParams.get('detalles');
-    this.pedido = this.navParams.get('pedidoForEdit');
-    this.detallesParaBorrar = this.navParams.get('detallesParaBorrar');
-    this.detallesParaActualizar = this.navParams.get('detallesParaActualizar');
-    this.armarPedido();
-  }
 
-  armarPedido() {
-    if (this.id == '') {
+    if (this.id == '' || this.id == null) {
+      console.log("Nuevo Pedido")
       this.action = "Nuevo Pedido";
       this.pedido.gastosEnvio = 0.0;
       this.pedido.nroPedido = 0;
       this.calcularSubTotalYMontoTotal();
     } else {
+      console.log("Actualizando Pedido")
       this.action = "Actualizar Pedido";
+      this.pedido = this.navParams.get('pedidoForEdit');
       this.datesP = new Date(this.pedido.fechaPedido + ' UTC').toISOString();
       this.datesE = new Date(this.pedido.fechaEstimadaEntrega + ' UTC').toISOString();
+      this._cliente = this._clientes.find(c => c.id == this.pedido.clienteId);
       this.compararFechas()
       this.calcularSubTotalYMontoTotal();
     }
@@ -131,6 +134,7 @@ export class PedidoPage {
               if (pedidosLocal != null && pedidosLocal.length > 0) {
                 this.detalleProvider.updateMany(this.detallesParaActualizar)
                 this.detalleProvider.deleteLocalMany(this.detallesParaBorrar);
+                this.detalleProvider.createManyLocal(this.detallesNuevosParaCrear, this.pedido.id)
                 let jsonString = JSON.stringify(pedidosLocal);
                 let auxPedidos = <Pedidos[]>JSON.parse(jsonString);
                 this.dbController.setPedidoLocalArray(auxPedidos);
@@ -158,6 +162,7 @@ export class PedidoPage {
   }
 
   setCliente(c: Cliente) {
+    console.log(c);
     this.pedido.clienteId = c.id;
     this.pedido.domicilioId = c.domicilioId;
   }
@@ -170,7 +175,7 @@ export class PedidoPage {
     day = (date.value.day < 10) ? `0${date.value.day}` : `${date.value.day}`;
     hours = (date.value.hour < 10) ? `0${date.value.hour}` : `${date.value.hour}`;
     min = (date.value.minute < 10) ? `0${date.value.minute}` : `${date.value.minute}`;
-    let dateTime = `${year}-${month}-${day}T${hours}:${min}:00`
+    let dateTime = `${year}-${month}-${day}T${hours}:${min}:00`;
     this.pedido.fechaPedido = moment(dateTime).toDate();
     dateE.min = dateTime;
     this.compararFechas();

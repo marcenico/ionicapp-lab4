@@ -32,15 +32,13 @@ export class PedidosPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad PedidosPage');
     this._pedidos = this.dbController.getPedidoLocal();
+    if (this._pedidos.length == 0) this.showToastTop();
     this.detalleProvider.getAllLocal()
       .then(data => {
         let jsonString = JSON.stringify(data);
         let auxDetalles = <Pedidoventadetalle[]>JSON.parse(jsonString);
         this.dbController.setDetalleLocalArray(auxDetalles);
         this._detalles = this.dbController.getDetalleLocal();
-        if (this._pedidos.length == 0 && this._detalles.length == 0) {
-          this.showToastTop();
-        }
       })
   }
 
@@ -88,22 +86,28 @@ export class PedidosPage {
                 .then(() => {
                   pedido.migrado = 1;
                   console.log("Migracion existosa");
-                  this.showAlertMigracion('Exito!', 'Pedido migrado con exito');
+                  this.showAlertMigracion('La migracion ha sido exitosa!', 'Pedido migrado con exito');
                 })
                 .catch(error => { console.log(error) })
               //#endregion
 
             }, () => {
-              this.showAlertMigracion('Error!', 'Ocurrio un error al intentar migrar el pedido, intente nuevamente');
+              this.showAlertMigracion('Ocurrio un error!', 'Error al intentar migrar el pedido, intente nuevamente');
             })
         }, () => {
-          this.showAlertMigracion('Error!', 'Ocurrio un error al intentar migrar el pedido, intente nuevamente');
+          this.showAlertMigracion('Ocurrio un error!', 'Error al intentar migrar el pedido, intente nuevamente');
         });
 
     } else {
       this.presentLoading();
       this.showAlertMigracion('Error!', 'Este pedido ya ha sido migrado');
     }
+  }
+
+  seeFormPedidos() {
+    this.navCtrl.push(DetallePage, {
+      id: ''
+    });
   }
 
   showToastTop() {

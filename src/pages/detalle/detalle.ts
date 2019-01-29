@@ -22,8 +22,11 @@ export class DetallePage {
   action: string;
   detallesParaBorrar: Pedidoventadetalle[] = [];
   detallesParaActualizar: Pedidoventadetalle[] = [];
+  detallesNuevosParaCrear: Pedidoventadetalle[] = [];
   _detalles: Array<Pedidoventadetalle> = [];
+  isAdding: boolean = true;
   private articulos: Articulo[] = [];
+  private _articulo: Articulo;
   private detalle: Pedidoventadetalle;
   private aux: Pedidoventadetalle = new Pedidoventadetalle();
   private pedidoForEdit: Pedidos = new Pedidos();
@@ -36,12 +39,12 @@ export class DetallePage {
     private dbController: DbControllerProvider,
     private formBuilder: FormBuilder,
   ) {
+    this.validarFormulario();
     this.id = this.navParams.get('id');
   }
 
   ionViewDidLoad() {
     this.articulos = this.dbController.getArticuloLocal();
-
     if (this.id == '' || this.id == null) {
       this.action = "Generar Pedido";
     } else {
@@ -57,10 +60,8 @@ export class DetallePage {
               this.articuloProvider.getLocalArticuloById(auxDetalles[i].articuloId)
                 .then(data => {
                   let jsonString = JSON.stringify(data);
-                  console.log(jsonString);
                   let articulo = <Articulo[]>JSON.parse(jsonString);
-                  auxDetalles[i].articulo = articulo[0];
-
+                  auxDetalles[i].articulo = new Articulo(articulo[0]);
                 })
             }
             this._detalles = auxDetalles;
@@ -68,7 +69,6 @@ export class DetallePage {
         })
         .catch(error => console.log(error))
     }
-    this.validarFormulario();
   }
 
   private validarFormulario() {
@@ -90,21 +90,19 @@ export class DetallePage {
 
   private setFormValues(data: Pedidoventadetalle) {
     console.log(data);
-    this.dForma.get('cantidad').setValue(data.cantidad);
-    this.dForma.get('descuento').setValue(data.porcentajeDescuento);
-    this.dForma.get('subTotal').setValue(data.subTotal);
     this.setSelectedArticulo(data.articuloId);
     this.detalle = data;
   }
 
   selectArticuloChange(selectedArticulo: Articulo) {
     this.detalle.articulo = selectedArticulo;
+    this.detalle.articuloId = selectedArticulo.id;
     this.calculateSubtotal();
   }
 
   private setSelectedArticulo(articuloId: number) {
     if (articuloId != null) {
-      this.dForma.get('articulo').setValue(articuloId);
+      this._articulo = this.articulos.find(a => a.id == articuloId)
     } else {
       this.dForma.get('articulo').setValue(null);
     }
@@ -122,23 +120,30 @@ export class DetallePage {
   }
 
   addDetalle() {
-    if (this.id == '') { //Agregando nuevo detalle al arreglo
+    if (this.isAdding) { //Agregando nuevo detalle al arreglo
+      console.log("Se agrego detalle")
+      this.detallesNuevosParaCrear.push(this.detalle);
+      let auxId = 1;
+      for (const d of this._detalles) {
+        auxId = auxId + d.id
+      }
+      this.detalle.id = auxId;
       this._detalles.push(this.detalle);
-      this.seeForm(false);
-      console.log(this._detalles);
     } else {
 
       for (let i = 0; i < this._detalles.length; i++) {
         if (this._detalles[i].id == this.detalle.id) {
+          console.log("Se actualizo detalle")
           this._detalles[i] = this.detalle;
           this.detallesParaActualizar.push(this.detalle);
         }
       }
-      this.seeForm(false);
     }
+    this.seeForm(false, false);
   }
 
-  seeForm(v: boolean) {
+  seeForm(v: boolean, isAdding: boolean) {
+    this.isAdding = isAdding;
     this.showForm = v;
     this.setDefaultForm();
     this.setSelectedArticulo(null);
@@ -165,7 +170,8 @@ export class DetallePage {
   }
 
   editRow(refDetalle: Pedidoventadetalle, slidingItem: ItemSliding) {
-    this.seeForm(true);
+    this.isAdding = false;
+    this.seeForm(true, false);
     this.aux = refDetalle;
     this.setFormValues(this.aux);
     slidingItem.close();
@@ -173,7 +179,7 @@ export class DetallePage {
 
   cancel() {
     this.detalle = this.aux;
-    this.seeForm(false);
+    this.seeForm(false, false);
   }
 
   generatePedido() {
@@ -188,7 +194,8 @@ export class DetallePage {
         detalles: this._detalles,
         pedidoForEdit: this.pedidoForEdit,
         detallesParaBorrar: this.detallesParaBorrar,
-        detallesParaActualizar: this.detallesParaActualizar
+        detallesParaActualizar: this.detallesParaActualizar,
+        detallesNuevosParaCrear: this.detallesNuevosParaCrear
       });
     }
   }
@@ -203,7 +210,7 @@ export class DetallePage {
       { type: 'required', message: '* Este campo es requerido.' },
       { type: 'pattern', message: '* Numeros entre 0 - 100' }
     ],
-    'subTotal': [
+    'requerido': [
       { type: 'required', message: '* Este campo es requerido.' }
     ]
   }

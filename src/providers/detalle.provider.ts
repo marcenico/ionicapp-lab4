@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SQLiteObject } from '@ionic-native/sqlite';
 import { Pedidoventadetalle, PedidoventadetalleApi } from '../app/shared/sdk';
-import { Seq } from '../wrappers/Seq';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -31,6 +30,7 @@ export class DetalleProvider {
 
   createManyLocal(detalles: Pedidoventadetalle[], pedidoVentaId: number) {
     for (const d of detalles) {
+      d.id = null;
       let sql = `INSERT INTO pedidoventadetalle(cantidad, subTotal, porcentajeDescuento, articuloId, pedidoVentaId) VALUES (?,?,?,?,?)`
       this.db.executeSql(sql, [d.cantidad, d.subTotal, d.porcentajeDescuento, d.articulo.id, pedidoVentaId])
         .then(() => console.log("EXECUTED CREADO DETALLE"))
@@ -50,8 +50,8 @@ export class DetalleProvider {
         porcentajeDescuento	double NOT NULL,
         articuloId	int ( 10 ) NOT NULL,
         pedidoVentaId	int ( 10 ) NOT NULL,
-        CONSTRAINT pedidoVentaId FOREIGN KEY(pedidoVentaId) REFERENCES pedidoventa(id) ON DELETE CASCADE ON UPDATE CASCADE,
-        CONSTRAINT articuloId FOREIGN KEY(articuloId) REFERENCES articulo(id) ON DELETE NO ACTION ON UPDATE CASCADE
+        CONSTRAINT pedidoVentaId FOREIGN KEY (pedidoVentaId) REFERENCES pedidoventa(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT articuloId FOREIGN KEY (articuloId) REFERENCES articulo(id) ON DELETE NO ACTION ON UPDATE CASCADE
       )`;
     this.db.executeSql(sql, [])
       .then(() => console.log("creada tabla detalle"))

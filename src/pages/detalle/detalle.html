@@ -9,7 +9,7 @@
 
 <ion-content padding>
 
-  <button ion-button small (click)="seeForm(true)" color="yellow">
+  <button ion-button small (click)="seeForm(true, true)" color="yellow">
     Agregar detalle
   </button>
 
@@ -50,12 +50,19 @@
     <ion-list>
       <ion-item>
         <ion-label>Articulo</ion-label>
-        <ion-select formControlName="articulo" [(ngModel)]="detalle.articulo" submitText="Okay" cancelText="Cancelar"
-          (ionChange)="selectArticuloChange(detalle.articulo)">
-          <ion-option *ngFor="let a of articulos" [value]="a.id">{{a.denominacion}}</ion-option>
+        <ion-select formControlName="articulo" [(ngModel)]="_articulo" submitText="Okay" cancelText="Cancelar"
+          (ionChange)="selectArticuloChange(_articulo)">
+          <ion-option *ngFor="let a of articulos" [value]="a">{{a.denominacion}}</ion-option>
         </ion-select>
       </ion-item>
     </ion-list>
+    <p style="color:rgb(213, 0, 0)">
+        <ng-container *ngFor="let validation of validation_messages.requerido">
+          <div class="error-message" *ngIf="dForma.get('articulo').hasError(validation.type) && (dForma.get('articulo').dirty || dForma.get('articulo').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </p>
 
     <!-- Subtotal -->
     <ion-item>
@@ -63,7 +70,7 @@
       <ion-input type="number" id="subTotal" placeholder="0" formControlName="subTotal" [(ngModel)]="detalle.subTotal"></ion-input>
     </ion-item>
     <p style="color:rgb(213, 0, 0)">
-      <ng-container *ngFor="let validation of validation_messages.subTotal">
+      <ng-container *ngFor="let validation of validation_messages.requerido">
         <div class="error-message" *ngIf="dForma.get('subTotal').hasError(validation.type) && (dForma.get('subTotal').dirty || dForma.get('subTotal').touched)">
           {{ validation.message }}
         </div>
@@ -95,8 +102,11 @@
             <p>{{i+1}}</p>
           </div>
 
-          <h2> Cantidad de articulos: {{d.cantidad}}</h2>
-          <p> Subtotal: {{d.subTotal}}</p>
+          <div *ngIf="undefined !== d.articulo">
+            <h2> Cantidad de articulos: {{d.cantidad}}, Articulo: {{d.articulo.denominacion}}</h2>
+            <p> Subtotal: {{d.subTotal}}</p>
+          </div>
+
         </ion-item>
 
         <ion-item-options>

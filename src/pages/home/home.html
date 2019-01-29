@@ -8,27 +8,22 @@
 
 
 <ion-content padding>
+
   <button ion-button (click)="importarData()" style="text-transform: none;" round>
     Importar datos
     <ion-icon class="button" name="md-cloud-download"></ion-icon>
   </button>
 
-  <ion-grid>
-    <ion-row align-items-end>
-      <ion-col></ion-col>
-      <ion-col col-10>
-        <img src="../../assets/imgs/logoutn.png" />
-      </ion-col>
-      <ion-col><br><br><br><br><br><br><br><br><br></ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="element-center">
+    <h3>Bienvenido!</h3>
+    <h6>En esta aplicacion puedes importar los datos de clientes, articulos y rubros que esten cargados en la aplicacion
+      web.
+    </h6>
+    <h6>Tambien es posible crear pedidos de venta localmente en tu disposituvo, estos registros pueden ser migrados a la
+      aplicacion web.</h6>
+  </div>
 
-
-
-  <ion-fab right bottom>
-    <button ion-fab (click)="seeFormPedidos()" color="navbar">
-      <ion-icon name="md-add"></ion-icon>
-    </button>
-  </ion-fab>
-
+  <div class="element-bottom">
+    <img src="../../assets/imgs/logoutn.png" />
+  </div>
 </ion-content>

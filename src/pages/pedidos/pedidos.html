@@ -15,7 +15,11 @@
 
 <ion-content padding>
 
-  <div *ngIf="undefined !== this._pedidos" class="list">
+  <div *ngIf="this._pedidos.length == 0">
+    <h6>No hay registros de pedidos</h6>
+  </div>
+
+  <div *ngIf="this._pedidos.length > 0" class="list">
     <ion-list>
 
       <br><br><br>
@@ -53,5 +57,12 @@
 
     </ion-list>
   </div>
+
+  <ion-fab right bottom>
+    <button ion-fab (click)="seeFormPedidos()" color="navbar">
+      <ion-icon name="md-add"></ion-icon>
+    </button>
+  </ion-fab>
+
 
 </ion-content>

@@ -6,7 +6,7 @@ import { DomicilioProvider } from './domicilio.provider';
 import { ClienteProvider } from './cliente.provider';
 import { PedidoProvider } from './pedido.provider';
 import { DetalleProvider } from './detalle.provider';
-import { Rubro, Articulo, Domicilio, Cliente, Pedidoventadetalle, Pedidoventa } from '../app/shared/sdk';
+import { Rubro, Articulo, Domicilio, Cliente, Pedidoventadetalle } from '../app/shared/sdk';
 import { LoadingController, Loading, AlertController } from 'ionic-angular';
 import { Pedidos } from '../wrappers/Pedidos';
 

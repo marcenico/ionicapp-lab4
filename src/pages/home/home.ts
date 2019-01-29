@@ -28,14 +28,6 @@ export class HomePage {
     this.dbController.getDataFromServer()
 
   }
-
-  seeFormPedidos() {
-    this.navCtrl.push(DetallePage, {
-      id: ''
-    });
-    // const modal = this.modalCtrl.create(DetallePage);
-    // modal.present();
-  }
   
   seePedidos() {
     this.navCtrl.push(PedidosPage);

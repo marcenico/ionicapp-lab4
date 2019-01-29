@@ -86,12 +86,19 @@
     <ion-list>
       <ion-item>
         <ion-label>Cliente</ion-label>
-        <ion-select formControlName="cliente" (ionChange)="setCliente(pedido.cliente)" [(ngModel)]="pedido.clienteId"
+        <ion-select formControlName="cliente" (ionChange)="setCliente(_cliente)" [(ngModel)]="_cliente"
           submitText="Okay" cancelText="Cancelar">
-          <ion-option *ngFor="let c of _clientes" [value]="c.id">{{c.razonSocial}}</ion-option>
+          <ion-option *ngFor="let c of _clientes" [value]="c">{{c.razonSocial}}</ion-option>
         </ion-select>
       </ion-item>
     </ion-list>
+    <p style="color:rgb(213, 0, 0)">
+        <ng-container *ngFor="let validation of validation_messages.requiredOnly">
+          <div class="error-message" *ngIf="form.get('cliente').hasError(validation.type) && (form.get('cliente').dirty || form.get('cliente').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </p>
 
     <!-- Subtotal -->
     <ion-item>
