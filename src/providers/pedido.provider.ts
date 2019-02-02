@@ -30,8 +30,9 @@ export class PedidoProvider {
   }
 
   createLocal(p: Pedidos) {
+    p.migrado = 0;
     let sql = "INSERT INTO pedidoventa (nroPedido, fechaPedido, fechaEstimadaEntrega, gastosEnvio, estado, entregado, subTotal, montoTotal, migrado, clienteId, domicilioId) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-    return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, 0, p.clienteId, p.domicilioId]);
+    return this.db.executeSql(sql, [p.nroPedido, p.fechaPedido, p.fechaEstimadaEntrega, p.gastosEnvio, p.estado, p.entregado, p.subTotal, p.montoTotal, p.migrado, p.clienteId, p.domicilioId]);
   }
 
   createTableLocal() {
