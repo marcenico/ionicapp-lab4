@@ -90,6 +90,16 @@ export class DbControllerProvider {
     alert.present();
   }
 
+  showAlertDataImported() {
+    this.loader.dismiss();
+    const alert = this.alertCtrl.create({
+      title: 'Exito!!',
+      subTitle: 'Los registros han sido importados!',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
   showAlertLocal() {
     this.loader.dismiss();
     const alert = this.alertCtrl.create({
@@ -182,6 +192,7 @@ export class DbControllerProvider {
         }
         this.setClienteLocal(auxClientes)
         this._domicilioProvider.createLocal(this.getDomicilioLocal(), this.getClienteLocal(), 0);
+        this.showAlertDataImported();
         this.getPedidosLocal();
       }, error => {
         console.log(error);
