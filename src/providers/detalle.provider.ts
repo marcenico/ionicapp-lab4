@@ -31,9 +31,10 @@ export class DetalleProvider {
   createManyLocal(detalles: Pedidoventadetalle[], pedidoVentaId: number) {
     for (const d of detalles) {
       d.id = null;
+      d.pedidoVentaId = pedidoVentaId;
       let sql = `INSERT INTO pedidoventadetalle(cantidad, subTotal, porcentajeDescuento, articuloId, pedidoVentaId) VALUES (?,?,?,?,?)`
-      this.db.executeSql(sql, [d.cantidad, d.subTotal, d.porcentajeDescuento, d.articulo.id, pedidoVentaId])
-        .then(() => console.log("EXECUTED CREADO DETALLE"))
+      this.db.executeSql(sql, [d.cantidad, d.subTotal, d.porcentajeDescuento, d.articulo.id, d.pedidoVentaId])
+        .then(() => console.log("EXECUTED CREADO DETALLE ", d))
         .catch(error => console.log(error));
     }
 

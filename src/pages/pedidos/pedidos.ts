@@ -29,8 +29,8 @@ export class PedidosPage {
   ) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PedidosPage');
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter PedidosPage');
     this._pedidos = this.dbController.getPedidoLocal();
     if (this._pedidos.length == 0) this.showToastTop();
     this.detalleProvider.getAllLocal()
@@ -38,7 +38,8 @@ export class PedidosPage {
         let jsonString = JSON.stringify(data);
         let auxDetalles = <Pedidoventadetalle[]>JSON.parse(jsonString);
         this.dbController.setDetalleLocalArray(auxDetalles);
-        this._detalles = this.dbController.getDetalleLocal();
+        this._detalles = auxDetalles;
+        console.log(this._detalles);
       })
   }
 
@@ -71,6 +72,7 @@ export class PedidosPage {
   migrarPedido(pedido: Pedidos, slidingItem: ItemSliding) {
     slidingItem.close();
     let detallesAmigrar = this._detalles.filter(d => d.pedidoVentaId == pedido.id)
+    console.log(detallesAmigrar);
     let nroDeMigracion: number = 1; //cero o uno 
     if (pedido.migrado == 0) {
       this.presentLoading();
